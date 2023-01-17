@@ -20,37 +20,62 @@ public class Main {
         manager.createSubTask(subTask2);
         manager.createSubTask(subTask1);
 
+        System.out.println("Проверка создания и хранения методов");
+        System.out.println("-------------------------------------------------------");
         System.out.println(manager.getTaskList());
         System.out.println(manager.getSubTaskList());
         System.out.println(manager.getEpicTaskList());
+        System.out.println("Проверка получения списка сабов по эпику");
+        System.out.println("-------------------------------------------------------");
+        System.out.println(manager.getSubTaskListByEpic(epicTask1));
         System.out.println("_______________________________________________________");
+
+        System.out.println("Проверка обновления методов");
+        System.out.println("-------------------------------------------------------");
+        task1.setStatus(Status.IN_PROGRESS);
+        task2.setStatus(Status.IN_PROGRESS);
         manager.updateTask(task1);
         manager.updateTask(task2);
 
-        manager.updateSubTask(subTask3);
-        manager.updateSubTask(subTask3);
+        System.out.println(manager.getTaskList());
+        System.out.println("_______________________________________________________");
+        task1.setStatus(Status.DONE);
+        manager.updateTask(task1);
+        System.out.println(manager.getTaskList());
+        System.out.println("_______________________________________________________");
 
+        subTask1.setStatus(Status.IN_PROGRESS);
+        subTask2.setStatus(Status.IN_PROGRESS);
+        subTask3.setStatus(Status.IN_PROGRESS);
+
+        manager.updateSubTask(subTask3);
         manager.updateSubTask(subTask2);
         manager.updateSubTask(subTask1);
-        manager.updateSubTask(subTask2);
-        manager.updateSubTask(subTask2);
+
+        subTask3.setStatus(Status.DONE);
+        subTask1.setStatus(Status.DONE);
+        manager.updateSubTask(subTask3);
+        manager.updateSubTask(subTask1);
 
         System.out.println(manager.getTaskList());
         System.out.println(manager.getSubTaskList());
         System.out.println(manager.getEpicTaskList());
         System.out.println("_______________________________________________________");
 
+        System.out.println("Находим и удаляем по id");
+        System.out.println("-------------------------------------------------------");
+        System.out.println("Найдены задачи 4 и 1");
+        System.out.println("-------------------------------------------------------");
         System.out.println(manager.getEpicTaskById(4));
         System.out.println(manager.getTaskById(1));
         System.out.println("_______________________________________________________");
+        System.out.println("Удалены задачи 4 и 1");
+        System.out.println("-------------------------------------------------------");
         manager.removeEpicTask(4);
         manager.removeTask(1);
-
         System.out.println(manager.getTaskList());
         System.out.println(manager.getSubTaskList());
         System.out.println(manager.getEpicTaskList());
         System.out.println("_______________________________________________________");
-
-
     }
 }

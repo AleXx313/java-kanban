@@ -9,21 +9,21 @@ public class Manager {
 
     //Добавляем задачи.
     public void createTask(Task task) {
-        task.setStatus("NEW");
+        task.setStatus(Status.NEW);
         task.setId(idCounter);
         idCounter++;
         tasks.put(task.getId(), task);
     }
 
     public void createEpicTask(EpicTask epicTask) {
-        epicTask.setStatus("NEW");
+        epicTask.setStatus(Status.NEW);
         epicTask.setId(idCounter);
         idCounter++;
         epicTasks.put(epicTask.getId(), epicTask);
     }
 
     public void createSubTask(SubTask subTask) {
-        subTask.setStatus("NEW");
+        subTask.setStatus(Status.NEW);
         subTask.setId(idCounter);
         idCounter++;
         subTasks.put(subTask.getId(), subTask);
@@ -50,6 +50,14 @@ public class Manager {
     public ArrayList<SubTask> getSubTaskList() {
         ArrayList<SubTask> allTasks = new ArrayList<>();
         for (Integer key : subTasks.keySet()) {
+            allTasks.add(subTasks.get(key));
+        }
+        return allTasks;
+    }
+
+    public ArrayList<SubTask> getSubTaskListByEpic(EpicTask epicTask){
+        ArrayList<SubTask> allTasks = new ArrayList<>();
+        for (Integer key : epicTask.getSubTasks().keySet()){
             allTasks.add(subTasks.get(key));
         }
         return allTasks;
@@ -84,37 +92,17 @@ public class Manager {
 
     //Обновление задач
     public void updateTask(Task task) {
-        switch (task.getStatus()) {
-            case "NEW":
-                task.setStatus("IN_PROGRESS");
-                break;
-            case "IN_PROGRESS":
-                task.setStatus("DONE");
-                break;
-            default:
-                System.out.println("Задача \"" + task.getTitle() + "\" уже была выполнена!");
-        }
         tasks.put(task.getId(), task);
     }
 
     public void updateSubTask(SubTask subTask) {
-        switch (subTask.getStatus()) {
-            case "NEW":
-                subTask.setStatus("IN_PROGRESS");
-                break;
-            case "IN_PROGRESS":
-                subTask.setStatus("DONE");
-                break;
-            default:
-                System.out.println("Задача \"" + subTask.getEpicTask().getTitle() + "\" уже была выполнена!");
-        }
-        if (subTask.getEpicTask().getStatus().equals("NEW")) {
-            subTask.getEpicTask().setStatus("IN_PROGRESS");
+        if (subTask.getEpicTask().getStatus().equals(Status.NEW)) {
+            subTask.getEpicTask().setStatus(Status.IN_PROGRESS);
         }
         subTasks.put(subTask.getId(), subTask);
         subTask.getEpicTask().getSubTasks().put(subTask.getId(), subTask);
         if (subTask.getEpicTask().isDoneCheck()) {
-            subTask.getEpicTask().setStatus("DONE");
+            subTask.getEpicTask().setStatus(Status.DONE);
         }
     }
 

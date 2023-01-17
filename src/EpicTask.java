@@ -15,7 +15,7 @@ public class EpicTask extends Task {
     public boolean isDoneCheck() {
         boolean flag = true;
         for (SubTask subTask : subTasks.values()) {
-            if (subTask.getStatus().equals("IN_PROGRESS")) {
+            if (subTask.getStatus().equals(Status.IN_PROGRESS)) {
                 flag = false;
                 break;
             }
