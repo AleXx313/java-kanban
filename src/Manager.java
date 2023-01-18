@@ -55,9 +55,9 @@ public class Manager {
         return allTasks;
     }
 
-    public ArrayList<SubTask> getSubTaskListByEpic(EpicTask epicTask){
+    public ArrayList<SubTask> getSubTaskListByEpic(EpicTask epicTask) {
         ArrayList<SubTask> allTasks = new ArrayList<>();
-        for (Integer key : epicTask.getSubTasks().keySet()){
+        for (Integer key : epicTask.getSubTasks().keySet()) {
             allTasks.add(subTasks.get(key));
         }
         return allTasks;
@@ -106,6 +106,10 @@ public class Manager {
         }
     }
 
+    public void updateEpicTask(EpicTask epicTask) {
+        epicTasks.put(epicTask.getId(), epicTask);
+    }
+
     //Удаляем задачи
     public void removeTask(int id) {
         tasks.remove(id);
@@ -123,5 +127,4 @@ public class Manager {
     public void removeSubTask(int id) {
         subTasks.remove(id);
     }
-
 }
