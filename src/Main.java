@@ -69,7 +69,19 @@ public class Main {
         System.out.println(taskManager.getEpicTaskById(4));
         System.out.println(taskManager.getTaskById(1));
         System.out.println("_______________________________________________________");
-        System.out.println("Удалены задачи 4 и 1");
+
+        System.out.println(Managers.getDefaultHistory().getHistory());
+        System.out.println(taskManager.getEpicTaskById(3));
+        System.out.println(taskManager.getTaskById(2));
+        System.out.println(taskManager.getEpicTaskById(4));
+        System.out.println(Managers.getDefaultHistory().getHistory());
+        System.out.println(taskManager.getTaskById(1));
+        System.out.println(taskManager.getSubTaskById(5));
+        System.out.println(taskManager.getSubTaskById(6));
+        System.out.println(Managers.getDefaultHistory().getHistory());
+        System.out.println("-------------------------------------------------------");
+
+        System.out.println("Удаляем задачи 4 и 1");
         System.out.println("-------------------------------------------------------");
         taskManager.removeEpicTask(4);
         taskManager.removeTask(1);

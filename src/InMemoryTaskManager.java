@@ -79,14 +79,17 @@ public class InMemoryTaskManager implements TaskManager{
 
     // Получаем по идентификатору
     public Task getTaskById(int id) {
+        Managers.getDefaultHistory().add(tasks.get(id));
         return tasks.get(id);
     }
 
     public EpicTask getEpicTaskById(int id) {
+        Managers.getDefaultHistory().add(epicTasks.get(id));
         return epicTasks.get(id);
     }
 
     public SubTask getSubTaskById(int id) {
+        Managers.getDefaultHistory().add(subTasks.get(id));
         return subTasks.get(id);
     }
 
@@ -127,4 +130,5 @@ public class InMemoryTaskManager implements TaskManager{
     public void removeSubTask(int id) {
         subTasks.remove(id);
     }
+
 }
