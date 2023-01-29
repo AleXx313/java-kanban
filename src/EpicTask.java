@@ -22,4 +22,9 @@ public class EpicTask extends Task {
         }
         return flag;
     }
+
+    public boolean isEmptyCheck(){
+        return subTasks.isEmpty();
+    }
+
 }

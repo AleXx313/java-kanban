@@ -1,14 +1,12 @@
-public class Managers <T extends TaskManager> {
+public class Managers {
 
-    private T manager;
-    private static HistoryManager historyManager = new InMemoryHistoryManager();
+    private static final TaskManager manager = new InMemoryTaskManager();
+    private static final HistoryManager historyManager = new InMemoryHistoryManager();
 
     public TaskManager getDefault(){
         return manager;
     }
 
-
-    //Не уверен что правильно понял последний пункт ТЗ про рефаторинг History.
     public static HistoryManager getDefaultHistory(){
         return historyManager;
     }

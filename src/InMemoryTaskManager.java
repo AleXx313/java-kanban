@@ -7,6 +7,8 @@ public class InMemoryTaskManager implements TaskManager{
     private final HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
+
     //Добавляем задачи.
     public void createTask(Task task) {
         task.setStatus(Status.NEW);
@@ -73,23 +75,25 @@ public class InMemoryTaskManager implements TaskManager{
         epicTasks.clear();
     }
 
+    //Думал, что эпик может существовать без сабтаски.
     public void clearSubTasks() {
         subTasks.clear();
+        epicTasks.clear();
     }
 
     // Получаем по идентификатору
     public Task getTaskById(int id) {
-        Managers.getDefaultHistory().add(tasks.get(id));
+        historyManager.add(tasks.get(id));
         return tasks.get(id);
     }
 
     public EpicTask getEpicTaskById(int id) {
-        Managers.getDefaultHistory().add(epicTasks.get(id));
+        historyManager.add(epicTasks.get(id));
         return epicTasks.get(id);
     }
 
     public SubTask getSubTaskById(int id) {
-        Managers.getDefaultHistory().add(subTasks.get(id));
+        historyManager.add(subTasks.get(id));
         return subTasks.get(id);
     }
 
@@ -128,7 +132,12 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     public void removeSubTask(int id) {
+        EpicTask epicTask = subTasks.get(id).getEpicTask();
         subTasks.remove(id);
+        epicTask.getSubTasks().remove(id);
+        if(epicTask.isEmptyCheck()){
+            epicTasks.remove(epicTask.getId());
+        }
     }
 
 }
