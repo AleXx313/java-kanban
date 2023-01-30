@@ -12,10 +12,30 @@ public class EpicTask extends Task {
         return subTasks;
     }
 
+
+    public void setStatusBySubtasks(){
+        if (isDoneCheck()){
+            setStatus(Status.DONE);
+            return;
+        }
+        boolean isIn_Progress = false;
+        for (SubTask subTask : subTasks.values()){
+            if (subTask.getStatus().equals(Status.IN_PROGRESS) || subTask.getStatus().equals(Status.DONE)){
+                isIn_Progress = true;
+                break;
+            }
+        }
+        if (isIn_Progress){
+            setStatus(Status.IN_PROGRESS);
+        } else {
+            setStatus(Status.NEW);
+        }
+    }
+
     public boolean isDoneCheck() {
         boolean flag = true;
         for (SubTask subTask : subTasks.values()) {
-            if (subTask.getStatus().equals(Status.IN_PROGRESS)) {
+            if (subTask.getStatus().equals(Status.IN_PROGRESS) || subTask.getStatus().equals(Status.NEW)) {
                 flag = false;
                 break;
             }
@@ -26,5 +46,7 @@ public class EpicTask extends Task {
     public boolean isEmptyCheck(){
         return subTasks.isEmpty();
     }
+
+
 
 }

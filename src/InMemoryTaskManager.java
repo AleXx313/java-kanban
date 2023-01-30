@@ -30,6 +30,7 @@ public class InMemoryTaskManager implements TaskManager{
         idCounter++;
         subTasks.put(subTask.getId(), subTask);
         subTask.getEpicTask().getSubTasks().put(subTask.getId(), subTask);
+        subTask.getEpicTask().setStatusBySubtasks();
     }
 
     // Получаем списки задач.
@@ -131,13 +132,12 @@ public class InMemoryTaskManager implements TaskManager{
 
     }
 
+
     public void removeSubTask(int id) {
         EpicTask epicTask = subTasks.get(id).getEpicTask();
         subTasks.remove(id);
         epicTask.getSubTasks().remove(id);
-        if(epicTask.isEmptyCheck()){
-            epicTasks.remove(epicTask.getId());
-        }
+        epicTask.setStatusBySubtasks();
     }
 
 }
