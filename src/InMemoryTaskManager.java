@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager{
     private static int idCounter = 1;
@@ -138,6 +139,10 @@ public class InMemoryTaskManager implements TaskManager{
         subTasks.remove(id);
         epicTask.getSubTasks().remove(id);
         epicTask.setStatusBySubtasks();
+    }
+    
+    public List<Task> getHistory(){
+        return historyManager.getHistory();
     }
 
 }
