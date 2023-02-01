@@ -63,49 +63,43 @@ public class Main {
         System.out.println(taskManager.getTaskList());
         System.out.println(taskManager.getSubTaskList());
         System.out.println(taskManager.getEpicTaskList());
-
-
-
         taskManager.createSubTask(subTask4);
-
         System.out.println(taskManager.getSubTaskList());
         System.out.println(taskManager.getEpicTaskList());
-
+        System.out.println("_______________________________________________________");
+        System.out.println("Находим и удаляем по id");
+        System.out.println("-------------------------------------------------------");
+        System.out.println("Найдены задачи 4 и 1");
+        System.out.println("-------------------------------------------------------");
+        System.out.println(taskManager.getEpicTaskById(4));
+        System.out.println(taskManager.getTaskById(1));
         System.out.println("_______________________________________________________");
 
-//        System.out.println("Находим и удаляем по id");
-//        System.out.println("-------------------------------------------------------");
-//        System.out.println("Найдены задачи 4 и 1");
-//        System.out.println("-------------------------------------------------------");
-//        System.out.println(taskManager.getEpicTaskById(4));
-//        System.out.println(taskManager.getTaskById(1));
-//        System.out.println("_______________________________________________________");
-//
-//        System.out.println(Managers.getDefaultHistory().getHistory());
-//        System.out.println(taskManager.getEpicTaskById(3));
-//        System.out.println(taskManager.getTaskById(2));
-//        System.out.println(taskManager.getEpicTaskById(4));
-//        System.out.println(Managers.getDefaultHistory().getHistory());
-//        System.out.println(taskManager.getTaskById(1));
-//        System.out.println(taskManager.getSubTaskById(5));
-//        System.out.println(taskManager.getSubTaskById(6));
-//        System.out.println(Managers.getDefaultHistory().getHistory());
-//        System.out.println("-------------------------------------------------------");
+        System.out.println(taskManager.getHistory());
+        System.out.println(taskManager.getEpicTaskById(3));
+        System.out.println(taskManager.getTaskById(2));
+        System.out.println(taskManager.getEpicTaskById(4));
+        System.out.println(taskManager.getHistory());
+        System.out.println(taskManager.getTaskById(1));
+        System.out.println(taskManager.getSubTaskById(5));
+        System.out.println(taskManager.getSubTaskById(6));
+        System.out.println(taskManager.getHistory());
+        System.out.println("-------------------------------------------------------");
 
-//        System.out.println("Удаляем задачи 4 и 1");
-//        System.out.println("-------------------------------------------------------");
-//        taskManager.removeEpicTask(4);
-//        taskManager.removeTask(1);
-//        System.out.println(taskManager.getTaskList());
-//        System.out.println(taskManager.getSubTaskList());
-//        System.out.println(taskManager.getEpicTaskList());
-//        System.out.println("_______________________________________________________");
-//        System.out.println("Удаляем задачи 6 и 7");
-//        System.out.println("-------------------------------------------------------");
-//        taskManager.removeSubTask(6);
-//        taskManager.removeSubTask(7);
-//        System.out.println(taskManager.getTaskList());
-//        System.out.println(taskManager.getSubTaskList());
-//        System.out.println(taskManager.getEpicTaskList());
+        System.out.println("Удаляем задачи 4 и 1");
+        System.out.println("-------------------------------------------------------");
+        taskManager.removeEpicTask(4);
+        taskManager.removeTask(1);
+        System.out.println(taskManager.getTaskList());
+        System.out.println(taskManager.getSubTaskList());
+        System.out.println(taskManager.getEpicTaskList());
+        System.out.println("_______________________________________________________");
+        System.out.println("Удаляем задачи 6 и 7");
+        System.out.println("-------------------------------------------------------");
+        taskManager.removeSubTask(6);
+        taskManager.removeSubTask(7);
+        System.out.println(taskManager.getTaskList());
+        System.out.println(taskManager.getSubTaskList());
+        System.out.println(taskManager.getEpicTaskList());
     }
 }

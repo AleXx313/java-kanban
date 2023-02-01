@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 
 public interface TaskManager {
@@ -32,5 +33,8 @@ public interface TaskManager {
     void removeTask(int id);
     void removeEpicTask(int id);
     void removeSubTask(int id);
+
+    //Получаем историю просмотров
+    List<Task> getHistory();
 
 }
