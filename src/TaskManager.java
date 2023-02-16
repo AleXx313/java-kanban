@@ -36,5 +36,4 @@ public interface TaskManager {
 
     //Получаем историю просмотров
     List<Task> getHistory();
-
 }

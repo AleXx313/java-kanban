@@ -3,7 +3,7 @@ public class Managers {
     private static final TaskManager manager = new InMemoryTaskManager();
     private static final HistoryManager historyManager = new InMemoryHistoryManager();
 
-    public TaskManager getDefault(){
+    public static TaskManager getDefault(){
         return manager;
     }
 
