@@ -1,5 +1,9 @@
+package History;
+
+import Tasks.Task;
+
 public class Node {
-    //Данные хранимые в узле - объекты класса Task
+    //Данные хранимые в узле - объекты класса Tasks.Task
     private final Task task;
     //Ссылка на предыдущую ноду. Если это хвост, то ссылка на null
     Node prev;

@@ -1,3 +1,10 @@
+package Util;
+
+import History.HistoryManager;
+import History.InMemoryHistoryManager;
+import Manager.InMemoryTaskManager;
+import Manager.TaskManager;
+
 public class Managers {
 
     private static final TaskManager manager = new InMemoryTaskManager();

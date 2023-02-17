@@ -1,3 +1,10 @@
+package Manager;
+
+import History.HistoryManager;
+import Tasks.*;
+import Util.Managers;
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

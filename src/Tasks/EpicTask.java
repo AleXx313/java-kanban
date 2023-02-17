@@ -1,3 +1,5 @@
+package Tasks;
+
 import java.util.HashMap;
 
 public class EpicTask extends Task {
@@ -30,7 +32,7 @@ public class EpicTask extends Task {
         } else {
             setStatus(Status.NEW);
         }
-    }cd
+    }
 
     public boolean isDoneCheck() {
         boolean flag = true;

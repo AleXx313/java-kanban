@@ -1,3 +1,11 @@
+package Manager;
+
+import History.HistoryManager;
+import History.InMemoryHistoryManager;
+import Tasks.EpicTask;
+import Tasks.SubTask;
+import Tasks.Task;
+
 import java.util.ArrayList;
 import java.util.List;
 
