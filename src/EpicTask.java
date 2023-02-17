@@ -18,19 +18,19 @@ public class EpicTask extends Task {
             setStatus(Status.DONE);
             return;
         }
-        boolean isIn_Progress = false;
+        boolean isInProgress = false;
         for (SubTask subTask : subTasks.values()){
             if (subTask.getStatus().equals(Status.IN_PROGRESS) || subTask.getStatus().equals(Status.DONE)){
-                isIn_Progress = true;
+                isInProgress = true;
                 break;
             }
         }
-        if (isIn_Progress){
+        if (isInProgress){
             setStatus(Status.IN_PROGRESS);
         } else {
             setStatus(Status.NEW);
         }
-    }
+    }cd
 
     public boolean isDoneCheck() {
         boolean flag = true;
