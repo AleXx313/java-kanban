@@ -23,7 +23,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         return viewHistory.getTasks();
     }
 
-    class CustomLinkedList {
+    public static class CustomLinkedList {
 
         Node head = null;
         Node tail = null;
@@ -34,7 +34,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             int id = task.getId();
             if (historyMap.containsKey(id)) {
                 removeNode(historyMap.get(id));
-                historyMap.remove(id);
             }
             Node t = head;
             Node newNode = new Node(task, t, null);
@@ -42,7 +41,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             if (t == null) {
                 tail = newNode;
             } else {
-                t.next = newNode;
+                t.setNext(newNode);
             }
             historyMap.put(id, newNode);
         }
@@ -53,11 +52,11 @@ public class InMemoryHistoryManager implements HistoryManager {
             nodes.add(tail);
             int i = 0;
 
-            if (tail.next != null){
+            if (tail.getNext() != null){
                 do {
-                    nodes.add(nodes.get(i).next);
+                    nodes.add(nodes.get(i).getNext());
                     i++;
-                } while (nodes.get(i).next != null);
+                } while (nodes.get(i).getNext() != null);
             }
 
             List<Task> viewHistory = new ArrayList<>();
@@ -70,21 +69,23 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         public void removeNode(Node node) {
-            Node prev = node.prev; //Сохраняем ссылку на предыдущую ноду
-            Node next = node.next; //Сохраняем сслыку на следующую ноду
+            Node prev = node.getPrev(); //Сохраняем ссылку на предыдущую ноду
+            Node next = node.getNext(); //Сохраняем сслыку на следующую ноду
 
             if (prev == null) { // Если предыдущая нода null
                 tail = next;  //текущая удаляется, а следующая становится хвостом
             } else { //Иначе
-                prev.next = next; // Следующая становится следующей для предыдущей
-                node.prev = null; // Разрываем ссылку на предыдущую у текущей (По аналогии с кодом в LinkedList)
+                prev.setNext(next); // Следующая становится следующей для предыдущей
+                node.setPrev(null); // Разрываем ссылку на предыдущую у текущей (По аналогии с кодом в LinkedList)
             }
             if (next == null) { //По аналогии для следующей Ноды.
                 head = prev;
             } else {
-                next.prev = prev;
-                node.next = null;
+                next.setPrev(prev);
+                node.setNext(null);
             }
+            historyMap.remove(node.getTask().getId());
+
         }
     }
 }
