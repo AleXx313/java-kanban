@@ -1,6 +1,6 @@
-package History;
+package history;
 
-import Tasks.Task;
+import tasks.Task;
 
 import java.util.*;
 
@@ -45,51 +45,16 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
             historyMap.put(id, newNode);
         }
-        /*
-        Добавил вторую реализацию метода getTask(), без создания второго Листа с Нодами.
-        Поскольку в лист изначально добавляются Таски, чтобы получить ссылку на Таску в следующей Ноде,
-        <listName>.get(i).next.getTask() недостаточно. Приходится лазить в Мапу. Получается прям длинная цепочка
-        присваиваний. Из за этого для повышения читаемости изначально и сделал реализацию через создание
-        дополнительного Листа. Вроде бы и там и там получается одинаковая сложность. В одном случае каждый эллемент
-        дополнительно вставляем в новый лист, а в другом, для каждого элемента лазим в мапу.
 
-        На всякий случай оставлю 2 варианта=).
-        P.S. Спасибо за ревью=)!
-         */
         public List<Task> getTasks() {
-            List<Task> viewHistory = new ArrayList<>();
-
-            viewHistory.add(tail.getTask());
-            int i = 0;
-            if (tail.getNext() != null){
-                while (historyMap.get(viewHistory.get(i).getId()).getNext() != null){
-                    viewHistory.add(historyMap.get(viewHistory.get(i).getId()).getNext().getTask());
-                    i++;
-                }
+            List<Task> tasks = new ArrayList<>();
+            Node node = tail;
+            while (node != null){
+                tasks.add(node.getTask());
+                node = node.getNext();
             }
-            return viewHistory;
+            return tasks;
         }
-
-//        public List<Task> getTasks() {
-//            List<Node> nodes = new ArrayList<>();
-//
-//            nodes.add(tail);
-//            int i = 0;
-//
-//            if (tail.getNext() != null){
-//                while (nodes.get(i).getNext() != null){
-//                    nodes.add(nodes.get(i).getNext());
-//                    i++;
-//                }
-//            }
-//
-//            List<Task> viewHistory = new ArrayList<>();
-//            for (Node node : nodes) {
-//                viewHistory.add(node.getTask());
-//            }
-//
-//            return viewHistory;
-//        }
 
         public void removeNode(Node node) {
             Node prev = node.getPrev(); //Сохраняем ссылку на предыдущую ноду
