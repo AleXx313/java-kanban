@@ -1,6 +1,6 @@
-package History;
+package history;
 
-import Tasks.Task;
+import tasks.Task;
 
 public class Node {
     //Данные хранимые в узле - объекты класса Tasks.Task

@@ -1,9 +1,9 @@
-package Util;
+package util;
 
-import History.HistoryManager;
-import History.InMemoryHistoryManager;
-import Manager.InMemoryTaskManager;
-import Manager.TaskManager;
+import history.HistoryManager;
+import history.InMemoryHistoryManager;
+import manager.InMemoryTaskManager;
+import manager.TaskManager;
 
 public class Managers {
 
