@@ -1,12 +1,12 @@
 import manager.*;
 import tasks.*;
+import util.Managers;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        TaskManager taskManager = new InMemoryTaskManager();
-
+        TaskManager taskManager = Managers.getDefault();
 
         //создайте две задачи
         Task task1 = new Task("ТЗ", "Нужно дописать ТЗ");

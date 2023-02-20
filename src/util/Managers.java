@@ -7,15 +7,15 @@ import manager.TaskManager;
 
 public class Managers {
 
-    private static final TaskManager manager = new InMemoryTaskManager();
-    private static final HistoryManager historyManager = new InMemoryHistoryManager();
+    private static TaskManager manager;
+    private static HistoryManager historyManager;
 
     public static TaskManager getDefault(){
-        return manager;
+        return new InMemoryTaskManager();
     }
 
     public static HistoryManager getDefaultHistory(){
-        return historyManager;
+        return new InMemoryHistoryManager();
     }
 
 }
