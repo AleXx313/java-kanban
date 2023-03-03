@@ -2,10 +2,10 @@ package tasks;
 
 public class Task {
 
-    private final String title;
-    private final String description;
-    private int id;
-    private Status status;
+    protected final String title;
+    protected final String description;
+    protected int id;
+    protected Status status;
 
     public Task(String title, String description) {
         this.title = title;
@@ -34,10 +34,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Tasks.Task{" +
-                "id=" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", status='" + status + '\'' +
-                '}';
+        return String.format("%d,Task,%s,%s,%s", id, title, status, description);
     }
 }

@@ -49,6 +49,10 @@ public class EpicTask extends Task {
         return subTasks.isEmpty();
     }
 
+    @Override
+    public String toString() {
+        return String.format("%d,EpicTask,%s,%s,%s", id, title, status, description);
+    }
 
 
 }

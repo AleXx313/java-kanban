@@ -16,4 +16,9 @@ public class SubTask extends Task {
     public void setEpicTask(EpicTask epicTask) {
         this.epicTask = epicTask;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%d,SubTask,%s,%s,%s,%d", id, title, status, description, epicTask.id);
+    }
 }
