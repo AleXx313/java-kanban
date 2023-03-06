@@ -1,4 +1,4 @@
-import memory.FileBackedTaskManager;
+import manager.TaskManager;
 import tasks.*;
 import util.Managers;
 
@@ -8,12 +8,13 @@ public class Main {
 
     public static void main(String[] args) {
         //Создаем новый менеджер.
-        FileBackedTaskManager fileBackedTaskManager = Managers.loadFromFile(new File("src/data.csv"));
+        TaskManager fileBackedTaskManager = Managers.getFileBackedTaskManager(new File("src/data.csv"));
 //        //ЗАГРУЖАЕМ.
 //        System.out.println(fileBackedTaskManager.getSubTaskList());
 //        System.out.println(fileBackedTaskManager.getEpicTaskList());
 //        System.out.println(fileBackedTaskManager.getTaskList());
 //        System.out.println(fileBackedTaskManager.getHistory());
+
 //        //Продолжаем работу.
 //        Task task3 = new Task("Задача", "описание задачи");
 //        fileBackedTaskManager.createTask(task3);

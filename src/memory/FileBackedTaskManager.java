@@ -124,22 +124,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     // СОХРАНЕНИЕ
     //Метод по преобразованию всех тасок в список строк.
     public List<String> convertTasksToStrings() {
-        List<Task> tasks = getTaskList();
-        List<EpicTask> epics = getEpicTaskList();
-        List<SubTask> subTasks = getSubTaskList();
-
+        List<Task> tasks = getAllTypesTaskList();
         List<String> tasksToString = new ArrayList<>();
-
         for (Task task : tasks) {
             tasksToString.add(task.toString());
         }
-        for (EpicTask task : epics) {
-            tasksToString.add(task.toString());
-        }
-        for (SubTask task : subTasks) {
-            tasksToString.add(task.toString());
-        }
         return tasksToString;
+    }
+    //Утилитарный метод по получению листа Тасок всех типов.
+    public List<Task> getAllTypesTaskList(){
+        List<Task> tasks = getTaskList();
+        tasks.addAll(getEpicTaskList());
+        tasks.addAll(getSubTaskList());
+        return tasks;
     }
 
     //Метод по преобразованию истории вызовов в строку целых чисел (id).
@@ -167,7 +164,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             writer.write(historyToString()); //Запись истории.
 
         } catch (IOException e) {
-            throw new ManagerSaveException();
+            throw new ManagerSaveException("При записи данных в файл произошла ошибка");
         }
     }
 
@@ -176,26 +173,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static void loadFile() {
         List<String> lines = readFileContents(getPath());
         int idCounter = 1;
-        for (int i = 1; i < lines.size() - 2; i++) {
-            String line = lines.get(i);
-            String[] taskStringArray = line.split(",");
-            switch (taskStringArray[1]) {
-                case "Task":
-                    taskLoad(taskStringArray);
-                    break;
-                case "EpicTask":
-                    epicTaskLoad(taskStringArray);
-                    break;
-                case "SubTask":
-                    subTaskLoad(taskStringArray);
-                    break;
-                default:
-                    throw new IllegalStateException("Непредвиденная ошибка. Дата файл поврежден!");
-            }
-            idCounter++;
-        }
-        setIdCounter(idCounter);
         if (!lines.isEmpty()){
+            for (int i = 1; i < lines.size() - 2; i++) {
+                String line = lines.get(i);
+                String[] taskStringArray = line.split(",");
+                switch (taskStringArray[1]) {
+                    case "Task":
+                        taskLoad(taskStringArray);
+                        break;
+                    case "EpicTask":
+                        epicTaskLoad(taskStringArray);
+                        break;
+                    case "SubTask":
+                        subTaskLoad(taskStringArray);
+                        break;
+                    default:
+                        throw new IllegalStateException("Непредвиденная ошибка. Дата файл поврежден!");
+                }
+                idCounter++;
+            }
+            setIdCounter(idCounter);
             loadHistory(lines.get(lines.size() - 1));
         }
     }
