@@ -22,7 +22,7 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
-    public static FileBackedTaskManager loadFromFile(File file){
+    public static TaskManager getFileBackedTaskManager(File file){
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
         manager.loadFile();
         return manager;
