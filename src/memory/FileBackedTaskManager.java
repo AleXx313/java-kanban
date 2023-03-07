@@ -164,6 +164,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             writer.write(historyToString()); //Запись истории.
 
         } catch (IOException e) {
+            e.printStackTrace();
             throw new ManagerSaveException("При записи данных в файл произошла ошибка");
         }
     }
@@ -202,6 +203,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try {
             return Files.readAllLines(Path.of(path));
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Невозможно прочитать файл");
             return Collections.emptyList();
         }
