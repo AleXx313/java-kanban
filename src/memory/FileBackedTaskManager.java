@@ -123,7 +123,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     // СОХРАНЕНИЕ
     //Метод по преобразованию всех тасок в список строк.
-    public List<String> convertTasksToStrings() {
+    private List<String> convertTasksToStrings() {
         List<Task> tasks = getAllTypesTaskList();
         List<String> tasksToString = new ArrayList<>();
         for (Task task : tasks) {
@@ -132,7 +132,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return tasksToString;
     }
     //Утилитарный метод по получению листа Тасок всех типов.
-    public List<Task> getAllTypesTaskList(){
+    private List<Task> getAllTypesTaskList(){
         List<Task> tasks = getTaskList();
         tasks.addAll(getEpicTaskList());
         tasks.addAll(getSubTaskList());
@@ -140,7 +140,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     //Метод по преобразованию истории вызовов в строку целых чисел (id).
-    public static String historyToString() {
+    private static String historyToString() {
         List<Task> tasks = historyManager.getHistory();
         if (!tasks.isEmpty()){
             StringBuilder builder = new StringBuilder();
@@ -153,7 +153,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     //Метод по записи данных в файл.
-    public void save() {
+    private void save() {
         List<String> tasks = convertTasksToStrings();
         try (FileWriter writer = new FileWriter(data, StandardCharsets.UTF_8)) {
             writer.write("id,type,name,status,description,epic\n"); //Именование колонок.
@@ -198,7 +198,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     // Загрузка списка строк из файла.
-    public static List<String> readFileContents(String path) {
+    private static List<String> readFileContents(String path) {
         try {
             return Files.readAllLines(Path.of(path));
         } catch (IOException e) {
@@ -208,7 +208,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     //Метод по восстановлению истории
-    public static void loadHistory(String line) {
+    private static void loadHistory(String line) {
         List<Integer> history = historyFromString(line);
 
         for (Integer id : history) {
@@ -223,7 +223,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     //Метод по получению спика целочисленных значений из строки
-    public static List<Integer> historyFromString(String line) {
+    private static List<Integer> historyFromString(String line) {
         List<Integer> history = new ArrayList<>();
         String[] lines = line.split(",");
         for (int i = 0; i < lines.length; i++) {
@@ -233,21 +233,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     //Методы по загрузке Задач
-    public static void taskLoad(String[] taskStringArray) {
+    private static void taskLoad(String[] taskStringArray) {
         Task task = new Task(taskStringArray[2], taskStringArray[4]);
         task.setId(Integer.parseInt(taskStringArray[0]));
         task.setStatus(Status.valueOf(taskStringArray[3]));
         tasks.put(Integer.parseInt(taskStringArray[0]), task);
     }
 
-    public static void epicTaskLoad(String[] taskStringArray) {
+    private static void epicTaskLoad(String[] taskStringArray) {
         EpicTask epicTask = new EpicTask(taskStringArray[2], taskStringArray[4]);
         epicTask.setId(Integer.parseInt(taskStringArray[0]));
         epicTask.setStatus(Status.valueOf(taskStringArray[3]));
         epicTasks.put(Integer.parseInt(taskStringArray[0]), epicTask);
     }
 
-    public static void subTaskLoad(String[] taskStringArray) {
+    private static void subTaskLoad(String[] taskStringArray) {
         SubTask subTask = new SubTask(taskStringArray[2], taskStringArray[4]
                 , epicTasks.get(Integer.parseInt(taskStringArray[5])));
         subTask.setStatus(Status.valueOf(taskStringArray[3]));
