@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    private static int idCounter = 1;
+    private int idCounter = 1;
     protected static final HashMap<Integer, Task> tasks = new HashMap<>();
     protected static final HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
     protected static final HashMap<Integer, SubTask> subTasks = new HashMap<>();
@@ -18,7 +18,11 @@ public class InMemoryTaskManager implements TaskManager {
     protected static final HistoryManager historyManager = Managers.getDefaultHistory();
 
     protected static void setIdCounter(int idCounter) {
-        InMemoryTaskManager.idCounter = idCounter;
+        idCounter = idCounter;
+    }
+
+    public void resetIdCounter(){
+        idCounter = 1;
     }
 
     //Добавляем задачи.
@@ -97,7 +101,6 @@ public class InMemoryTaskManager implements TaskManager {
         epicTasks.clear();
     }
 
-    //Думал, что эпик может существовать без сабтаски.
     @Override
     public void clearSubTasks() {
         subTasks.clear();
@@ -107,20 +110,29 @@ public class InMemoryTaskManager implements TaskManager {
     // Получаем по идентификатору
     @Override
     public Task getTaskById(int id) {
-        historyManager.add(tasks.get(id));
-        return tasks.get(id);
+        if (tasks.containsKey(id)){
+            historyManager.add(tasks.get(id));
+            return tasks.get(id);
+        }
+        return null;
     }
 
     @Override
     public EpicTask getEpicTaskById(int id) {
-        historyManager.add(epicTasks.get(id));
-        return epicTasks.get(id);
+        if (epicTasks.containsKey(id)){
+            historyManager.add(epicTasks.get(id));
+            return epicTasks.get(id);
+        }
+        return null;
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        historyManager.add(subTasks.get(id));
-        return subTasks.get(id);
+        if (subTasks.containsKey(id)){
+            historyManager.add(subTasks.get(id));
+            return subTasks.get(id);
+        }
+        return null;
     }
 
     //Обновление задач
@@ -149,29 +161,35 @@ public class InMemoryTaskManager implements TaskManager {
     //Удаляем задачи
     @Override
     public void removeTask(int id) {
-        tasks.remove(id);
-        historyManager.remove(id);
+        if(getTaskById(id) != null){
+            tasks.remove(id);
+            historyManager.remove(id);
+        }
     }
 
     @Override
     public void removeEpicTask(int id) {
-
-        for (Integer subTaskId : epicTasks.get(id).getSubTasks().keySet()) {
-            subTasks.remove(subTaskId);
-            historyManager.remove(subTaskId);
+        if(getEpicTaskById(id) != null){
+            for (Integer subTaskId : epicTasks.get(id).getSubTasks().keySet()) {
+                removeSubTask(subTaskId);
+                historyManager.remove(subTaskId);
+            }
+            epicTasks.remove(id);
+            historyManager.remove(id);
         }
-        epicTasks.remove(id);
-        historyManager.remove(id);
+
 
     }
 
     @Override
     public void removeSubTask(int id) {
-        EpicTask epicTask = subTasks.get(id).getEpicTask();
-        subTasks.remove(id);
-        historyManager.remove(id);
-        epicTask.getSubTasks().remove(id);
-        epicTask.setStatusBySubtasks();
+        if (getSubTaskById(id) != null){
+            EpicTask epicTask = subTasks.get(id).getEpicTask();
+            subTasks.remove(id);
+            historyManager.remove(id);
+            epicTask.getSubTasks().remove(id);
+            epicTask.setStatusBySubtasks();
+        }
     }
 
     //Получаем историю просмотров, вызывая одноименный метод экземпляра класса "Менеджер историй".

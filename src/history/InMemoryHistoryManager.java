@@ -15,7 +15,10 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        viewHistory.removeNode(viewHistory.historyMap.get(id));
+        if (viewHistory.historyMap.containsKey(id)){
+            viewHistory.removeNode(viewHistory.historyMap.get(id));
+        }
+
     }
 
     @Override
@@ -58,7 +61,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
         public void removeNode(Node node) {
             Node prev = node.getPrev(); //Сохраняем ссылку на предыдущую ноду
-            Node next = node.getNext(); //Сохраняем сслыку на следующую ноду
+            Node next = node.getNext(); //Сохраняем ссылку на следующую ноду
 
             if (prev == null) { // Если предыдущая нода null
                 tail = next;  //текущая удаляется, а следующая становится хвостом

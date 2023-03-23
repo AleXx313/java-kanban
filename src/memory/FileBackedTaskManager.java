@@ -224,12 +224,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    //Метод по получению спика целочисленных значений из строки
+    //Метод по получению списка целочисленных значений из строки
     private static List<Integer> historyFromString(String line) {
         List<Integer> history = new ArrayList<>();
         String[] lines = line.split(",");
-        for (int i = 0; i < lines.length; i++) {
-            history.add(Integer.parseInt(lines[i]));
+        if (!lines[0].isBlank()){
+            for (int i = 0; i < lines.length; i++) {
+                history.add(Integer.parseInt(lines[i]));
+            }
         }
         return history;
     }
