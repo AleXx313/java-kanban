@@ -8,6 +8,9 @@ import tasks.EpicTask;
 import tasks.Status;
 import tasks.SubTask;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTaskTest {
@@ -19,32 +22,44 @@ class EpicTaskTest {
     @BeforeEach
     public void setUp(){
         manager = new InMemoryTaskManager();
-        epic = new EpicTask("Test Epic", "Test Epic Description");
-        sub1 = new SubTask("Test Sub One", "Test Sub One Description", epic);
-        sub2 = new SubTask("Test Sub Two", "Test Sub Two Description", epic);
+        epic = new EpicTask("Test Epic", "Test Epic Description",
+                LocalDateTime.of(2022,03,29,8,0,0), 60);
+        sub1 = new SubTask("Test Sub One", "Test Sub One Description",
+                LocalDateTime.of(2022,03,29,8,0,0), 15, epic);
+        sub2 = new SubTask("Test Sub Two", "Test Sub Two Description",
+                LocalDateTime.of(2022,03,29,8,45,0), 60, epic);
     }
     @AfterEach
     public void clearStaticContainers(){
         manager.clearEpicTasks();
         manager.resetIdCounter();
+        manager.removeEpicTask(epic.getId());
     }
 
     //Если подзадач нет, то лист с подзадачами пустой, а статус Эпика - NEW;
     @Test
-    public void statusShouldBeNewIfSubTasksListIsEmpty(){
+    public void statusShouldBeNewIfSubTasksListIsEmptyAlsoCheckedTime(){
         manager.createEpicTask(epic);
         assertTrue(epic.getSubTasks().isEmpty(), "Лист подзадач не пустой, хотя подзадач не создавалось!");
         assertEquals(epic.getStatus(), Status.NEW, "Статус эпика не NEW, хотя подзадач нет!");
+        assertEquals(LocalDateTime.MIN, epic.getStartTime(), "Время старта не минимальное, хотя сабтасок нет");
+
     }
 
     //Если у всех подзадач статус NEW, то и у Эпика статус NEW
     @Test
-    public void statusShouldBeNewIfSubtasksStatusIsOnlyNew(){
+    public void statusShouldBeNewIfSubtasksStatusIsOnlyNewAlsoCheckedTime(){
         manager.createEpicTask(epic);
         manager.createSubTask(sub1);
         manager.createSubTask(sub2);
         assertEquals(epic.getStatus(), Status.NEW, "Статус эпика не NEW, хотя статус подзадач не менялся" +
                 "и должен быть NEW!");
+        assertEquals(LocalDateTime.of(2022,03,29,8,0,0),
+                epic.getStartTime());
+        assertEquals(LocalDateTime.of(2022,03,29,9,45,0),
+                epic.getEndTime());
+        assertEquals(Duration.ofMinutes(75), epic.getDuration());
+
     }
 
     //Если у всех подзадач статус DONE, то и у Эпика статус DONE

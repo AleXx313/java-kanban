@@ -42,4 +42,8 @@ public interface TaskManager {
     List<Task> getHistory();
 
     void resetIdCounter();
+
+    List<Task> getPrioritizedTasks();
+
+    void clearTimeTree();
 }

@@ -9,6 +9,7 @@ import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,11 +25,14 @@ class HistoryManagerTest {
     @BeforeEach
     public void createTask() {
         historyManager = new InMemoryHistoryManager();
-        task = new Task("Test addNewTask", "Test addNewTask description");
+        task = new Task("Test addNewTask", "Test addNewTask description",
+                LocalDateTime.of(2022,03,29,5,0,0), 60);
         task.setId(1);
-        epicTask = new EpicTask("Test addNewEpicTask", "Test addNewEpicTask description");
+        epicTask = new EpicTask("Test addNewEpicTask", "Test addNewEpicTask description",
+                LocalDateTime.of(2022,03,29,8,0,0), 60);
         epicTask.setId(2);
-        subTask = new SubTask("Test addNewSubTask", "Test addNewSubTask description", epicTask);
+        subTask = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                LocalDateTime.of(2022,03,29,10,0,0), 60, epicTask);
         subTask.setId(3);
     }
     @AfterEach

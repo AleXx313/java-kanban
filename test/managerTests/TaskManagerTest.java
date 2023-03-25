@@ -9,6 +9,7 @@ import tasks.Status;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,9 +26,15 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @BeforeEach
     public void createTask() {
-        task = new Task("Test addNewTask", "Test addNewTask description");
-        epicTask = new EpicTask("Test addNewEpicTask", "Test addNewEpicTask description");
-        subTask = new SubTask("Test addNewSubTask", "Test addNewSubTask description", epicTask);
+        task = new Task("Test addNewTask", "Test addNewTask description",
+                LocalDateTime.of(2022,03,29,6,0,0), 60);
+        task.setId(1);
+        epicTask = new EpicTask("Test addNewEpicTask", "Test addNewEpicTask description",
+                LocalDateTime.of(2022,03,29,0,0,0), 60);
+        epicTask.setId(2);
+        subTask = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                LocalDateTime.of(2022,03,29,8,0,0), 60, epicTask);
+        subTask.setId(3);
     }
 
     //Поскольку менеджеры по логике своей работы статичные, их поля подлежат очистке для каждого последующего теста.
@@ -36,6 +43,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.removeSubTask(subTask.getId());
         taskManager.removeEpicTask(epicTask.getId());
         taskManager.removeTask(task.getId());
+        taskManager.clearTimeTree();
     }
 
     //Тесты по созданию задач одновременно проверяют и сохранение задач в контейнерах, а также работы методов по
@@ -289,5 +297,64 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.removeSubTask(subTask.getId());
         assertNotNull(taskManager.getEpicTaskById(epicTask.getId()));
         assertNull(taskManager.getSubTaskById(subTask.getId()));
+    }
+
+    @Test
+    public void getPrioritizedShouldReturnListWithAscendingOrder(){
+        Task task2 = new Task("TestTask2", "TestTask2",
+                LocalDateTime.of(2022, 03,29,5,0,0), 59);
+        Task task3 = new Task("TestTask3", "TestTask3",
+                LocalDateTime.of(2022, 03,29,4,0,0), 59);
+        Task task4 = new Task("TestTask4", "TestTask4",
+                LocalDateTime.of(2022, 03,29,3,0,0), 59);
+        SubTask subTask2 = new SubTask("TestSubTask2", "TestSubTask2",
+                LocalDateTime.of(2022,03,29,12,0,0), 59, epicTask);
+        taskManager.createTask(task);
+        taskManager.createTask(task2);
+        taskManager.createTask(task3);
+        taskManager.createTask(task4);
+        taskManager.createEpicTask(epicTask);
+        taskManager.createSubTask(subTask);
+        taskManager.createSubTask(subTask2);
+
+        assertEquals(List.of(task4, task3, task2, task, subTask, subTask2), taskManager.getPrioritizedTasks());
+
+        taskManager.removeTask(task.getId());
+        taskManager.removeTask(task2.getId());
+        taskManager.removeTask(task3.getId());
+        taskManager.removeTask(task4.getId());
+        taskManager.removeSubTask(subTask.getId());
+        taskManager.removeSubTask(subTask2.getId());
+        taskManager.clearTimeTree();
+    }
+
+    @Test
+    public void shouldNotCreateNewTaskIfItOverlapExistingTasks(){
+        Task task2 = new Task("TestTask2", "TestTask2",
+                LocalDateTime.of(2022, 03,29,5,45,0), 60);
+        Task task3 = new Task("TestTask3", "TestTask3",
+                LocalDateTime.of(2022, 03,29,5,01,0), 60);
+        Task task4 = new Task("TestTask4", "TestTask4",
+                LocalDateTime.of(2022, 03,29,6,59,0), 60);
+        SubTask subTask2 = new SubTask("TestSubTask2", "TestSubTask2",
+                LocalDateTime.of(2022,03,29,8,30,0), 60, epicTask);
+        taskManager.createTask(task);
+        taskManager.createTask(task2);
+        taskManager.createTask(task3);
+        taskManager.createTask(task4);
+        taskManager.createEpicTask(epicTask);
+        taskManager.createSubTask(subTask);
+        taskManager.createSubTask(subTask2);
+
+        assertEquals(List.of(task, subTask), taskManager.getPrioritizedTasks());
+
+        taskManager.removeTask(task.getId());
+        taskManager.removeTask(task2.getId());
+        taskManager.removeTask(task3.getId());
+        taskManager.removeTask(task4.getId());
+        taskManager.removeEpicTask(epicTask.getId());
+        taskManager.removeSubTask(subTask.getId());
+        taskManager.removeSubTask(subTask2.getId());
+        taskManager.clearTimeTree();
     }
 }

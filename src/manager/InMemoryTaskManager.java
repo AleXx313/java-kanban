@@ -8,6 +8,7 @@ import util.Managers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
 public class InMemoryTaskManager implements TaskManager {
     private int idCounter = 1;
@@ -16,6 +17,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected static final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
     protected static final HistoryManager historyManager = Managers.getDefaultHistory();
+
+    protected static final TreeSet<Task> timeTree = new TreeSet<>(new StartTimeComparator());
 
     protected static void setIdCounter(int idCounter) {
         idCounter = idCounter;
@@ -28,10 +31,15 @@ public class InMemoryTaskManager implements TaskManager {
     //Добавляем задачи.
     @Override
     public void createTask(Task task) {
+        if(isOverlapping(task)){
+            System.out.println("Заданный временной отрезок уже используется! Задача не создана!");
+            return;
+        }
         task.setStatus(Status.NEW);
         task.setId(idCounter);
         idCounter++;
         tasks.put(task.getId(), task);
+        timeTree.add(task);
     }
 
     @Override
@@ -44,12 +52,18 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubTask(SubTask subTask) {
+        if(isOverlapping(subTask)){
+            System.out.println("Заданный временной отрезок уже используется! Задача не создана!");
+            return;
+        }
         subTask.setStatus(Status.NEW);
         subTask.setId(idCounter);
         idCounter++;
         subTasks.put(subTask.getId(), subTask);
         subTask.getEpicTask().getSubTasks().put(subTask.getId(), subTask);
         subTask.getEpicTask().setStatusBySubtasks();
+        subTask.getEpicTask().setTimeBySubtasks();
+        timeTree.add(subTask);
     }
 
     // Получаем списки задач.
@@ -151,11 +165,13 @@ public class InMemoryTaskManager implements TaskManager {
         if (subTask.getEpicTask().isDoneCheck()) {
             subTask.getEpicTask().setStatus(Status.DONE);
         }
+        subTask.getEpicTask().setTimeBySubtasks();
     }
 
     @Override
     public void updateEpicTask(EpicTask epicTask) {
         epicTasks.put(epicTask.getId(), epicTask);
+        epicTask.setTimeBySubtasks();
     }
 
     //Удаляем задачи
@@ -177,8 +193,6 @@ public class InMemoryTaskManager implements TaskManager {
             epicTasks.remove(id);
             historyManager.remove(id);
         }
-
-
     }
 
     @Override
@@ -189,6 +203,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.remove(id);
             epicTask.getSubTasks().remove(id);
             epicTask.setStatusBySubtasks();
+            epicTask.setTimeBySubtasks();
         }
     }
 
@@ -197,5 +212,26 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
+    @Override
+    public List<Task> getPrioritizedTasks(){
+        return new ArrayList<>(timeTree);
+    }
 
+    public boolean isOverlapping(Task task){
+        boolean overlap = false;
+        List<Task> tasks = getPrioritizedTasks();
+        for (Task taskToCompare : tasks){
+            if (task.getStartTime().isAfter(taskToCompare.getStartTime())
+                    && task.getStartTime().isBefore(taskToCompare.getEndTime())
+                    || task.getEndTime().isAfter(taskToCompare.getStartTime())
+                    && task.getEndTime().isBefore(taskToCompare.getEndTime())){
+                overlap = true;
+            }
+        }
+        return overlap;
+    }
+    @Override
+    public void clearTimeTree(){
+        timeTree.clear();
+    }
 }

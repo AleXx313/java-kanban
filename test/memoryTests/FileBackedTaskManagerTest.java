@@ -14,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,12 +37,13 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     @AfterEach
     public void clearStaticContainers() {
         taskManager.removeSubTask(subTask.getId());
         taskManager.removeEpicTask(epicTask.getId());
         taskManager.removeTask(task.getId());
+        taskManager.clearTimeTree();
     }
 
     //Проверить загрузку таски, эпика и сабтаски (в файле все есть)
@@ -65,6 +68,18 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         assertEquals(Status.NEW, taskManager.getTaskById(1).getStatus());
         assertEquals(Status.NEW, taskManager.getEpicTaskById(2).getStatus());
         assertEquals(Status.NEW, taskManager.getSubTaskById(3).getStatus());
+
+        assertEquals(LocalDateTime.of(2022,03,29,6,0,0),
+                taskManager.getTaskById(1).getStartTime());
+        assertEquals(LocalDateTime.of(2022,03,29,8,0,0),
+                taskManager.getEpicTaskById(2).getStartTime());
+        assertEquals(LocalDateTime.of(2022,03,29,8,0,0),
+                taskManager.getSubTaskById(3).getStartTime());
+
+        assertEquals(Duration.ofMinutes(60), taskManager.getTaskById(1).getDuration());
+        assertEquals(Duration.ofMinutes(60), taskManager.getEpicTaskById(2).getDuration());
+        assertEquals(Duration.ofMinutes(60), taskManager.getSubTaskById(3).getDuration());
+
 
         assertNull(taskManager.getTaskById(9));
         assertNull(taskManager.getTaskById(0));

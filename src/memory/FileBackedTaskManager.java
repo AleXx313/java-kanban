@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -156,7 +159,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private void save() {
         List<String> tasks = convertTasksToStrings();
         try (FileWriter writer = new FileWriter(data, StandardCharsets.UTF_8)) {
-            writer.write("id,type,name,status,description,epic\n"); //Именование колонок.
+            writer.write("id,type,name,status,description,startTime,duration,epic\n"); //Именование колонок.
             for (String task : tasks) {
                 writer.write(task + "\n");  //Запись тасок.
             }
@@ -238,22 +241,34 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     //Методы по загрузке Задач
     private static void taskLoad(String[] taskStringArray) {
-        Task task = new Task(taskStringArray[2], taskStringArray[4]);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.HH.mm.ss");
+        LocalDateTime startTime = LocalDateTime.parse(taskStringArray[5], formatter);
+        Duration duration = Duration.ofSeconds(Long.parseLong(taskStringArray[6]));
+        int minutes = (int) duration.toMinutes();
+        Task task = new Task(taskStringArray[2], taskStringArray[4], startTime, minutes);
         task.setId(Integer.parseInt(taskStringArray[0]));
         task.setStatus(Status.valueOf(taskStringArray[3]));
         tasks.put(Integer.parseInt(taskStringArray[0]), task);
     }
 
     private static void epicTaskLoad(String[] taskStringArray) {
-        EpicTask epicTask = new EpicTask(taskStringArray[2], taskStringArray[4]);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.HH.mm.ss");
+        LocalDateTime startTime = LocalDateTime.parse(taskStringArray[5], formatter);
+        Duration duration = Duration.ofSeconds(Long.parseLong(taskStringArray[6]));
+        int minutes = (int) duration.toMinutes();
+        EpicTask epicTask = new EpicTask(taskStringArray[2], taskStringArray[4], startTime, minutes);
         epicTask.setId(Integer.parseInt(taskStringArray[0]));
         epicTask.setStatus(Status.valueOf(taskStringArray[3]));
         epicTasks.put(Integer.parseInt(taskStringArray[0]), epicTask);
     }
 
     private static void subTaskLoad(String[] taskStringArray) {
-        SubTask subTask = new SubTask(taskStringArray[2], taskStringArray[4]
-                , epicTasks.get(Integer.parseInt(taskStringArray[5])));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.HH.mm.ss");
+        LocalDateTime startTime = LocalDateTime.parse(taskStringArray[5], formatter);
+        Duration duration = Duration.ofSeconds(Long.parseLong(taskStringArray[6]));
+        int minutes = (int) duration.toMinutes();
+        SubTask subTask = new SubTask(taskStringArray[2], taskStringArray[4], startTime, minutes
+                , epicTasks.get(Integer.parseInt(taskStringArray[7])));
         subTask.setStatus(Status.valueOf(taskStringArray[3]));
         subTask.setId(Integer.parseInt(taskStringArray[0]));
         subTasks.put(Integer.parseInt(taskStringArray[0]), subTask);
