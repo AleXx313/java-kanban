@@ -174,7 +174,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     // ЗАГРУЗКА
     //Финальный метод для загрузки данных из файла
-    public static void loadFile() {
+    public void loadFile() {
         List<String> lines = readFileContents(getPath());
         int idCounter = 1;
         if (!lines.isEmpty()){
@@ -202,7 +202,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     // Загрузка списка строк из файла.
-    private static List<String> readFileContents(String path) {
+    private List<String> readFileContents(String path) {
         try {
             return Files.readAllLines(Path.of(path));
         } catch (IOException e) {
@@ -213,7 +213,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     //Метод по восстановлению истории
-    private static void loadHistory(String line) {
+    private void loadHistory(String line) {
         List<Integer> history = historyFromString(line);
 
         for (Integer id : history) {
@@ -240,7 +240,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     //Методы по загрузке Задач
-    private static void taskLoad(String[] taskStringArray) {
+    private void taskLoad(String[] taskStringArray) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.HH.mm.ss");
         LocalDateTime startTime = LocalDateTime.parse(taskStringArray[5], formatter);
         Duration duration = Duration.ofSeconds(Long.parseLong(taskStringArray[6]));
@@ -251,7 +251,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         tasks.put(Integer.parseInt(taskStringArray[0]), task);
     }
 
-    private static void epicTaskLoad(String[] taskStringArray) {
+    private void epicTaskLoad(String[] taskStringArray) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.HH.mm.ss");
         LocalDateTime startTime = LocalDateTime.parse(taskStringArray[5], formatter);
         Duration duration = Duration.ofSeconds(Long.parseLong(taskStringArray[6]));
@@ -262,7 +262,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         epicTasks.put(Integer.parseInt(taskStringArray[0]), epicTask);
     }
 
-    private static void subTaskLoad(String[] taskStringArray) {
+    private void subTaskLoad(String[] taskStringArray) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.HH.mm.ss");
         LocalDateTime startTime = LocalDateTime.parse(taskStringArray[5], formatter);
         Duration duration = Duration.ofSeconds(Long.parseLong(taskStringArray[6]));

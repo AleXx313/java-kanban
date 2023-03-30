@@ -2,6 +2,8 @@ package managerTests;
 
 import manager.InMemoryTaskManager;
 import manager.TaskManager;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import util.Managers;
@@ -9,9 +11,12 @@ import util.Managers;
 public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @BeforeEach
-
     public void setUp(){
         taskManager = new InMemoryTaskManager();
     }
 
+    @AfterEach
+    public void clearHistory(){
+        InMemoryTaskManager.clearHistory();
+    }
 }

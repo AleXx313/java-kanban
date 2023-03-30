@@ -45,5 +45,5 @@ public interface TaskManager {
 
     List<Task> getPrioritizedTasks();
 
-    void clearTimeTree();
+
 }

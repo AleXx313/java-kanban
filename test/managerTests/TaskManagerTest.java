@@ -1,6 +1,7 @@
 package managerTests;
 
 import manager.TaskManager;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @BeforeEach
     public abstract void setUp();
 
+
+
     @BeforeEach
     public void createTask() {
         task = new Task("Test addNewTask", "Test addNewTask description",
@@ -35,15 +38,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         subTask = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
                 LocalDateTime.of(2022,03,29,8,0,0), 60, epicTask);
         subTask.setId(3);
-    }
-
-    //Поскольку менеджеры по логике своей работы статичные, их поля подлежат очистке для каждого последующего теста.
-    @AfterEach
-    public void clearStaticContainers() {
-        taskManager.removeSubTask(subTask.getId());
-        taskManager.removeEpicTask(epicTask.getId());
-        taskManager.removeTask(task.getId());
-        taskManager.clearTimeTree();
     }
 
     //Тесты по созданию задач одновременно проверяют и сохранение задач в контейнерах, а также работы методов по
@@ -273,7 +267,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, taskManager.getHistory().size(), "Количество записей в истории не равно 1!");
     }
 
-    //remove методы c 0 c нормальным с 9999
     @Test
     public void shouldRemoveTaskByIdIfTaskWithIdExist(){
         taskManager.createTask(task);
@@ -318,14 +311,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(subTask2);
 
         assertEquals(List.of(task4, task3, task2, task, subTask, subTask2), taskManager.getPrioritizedTasks());
-
-        taskManager.removeTask(task.getId());
-        taskManager.removeTask(task2.getId());
-        taskManager.removeTask(task3.getId());
-        taskManager.removeTask(task4.getId());
-        taskManager.removeSubTask(subTask.getId());
-        taskManager.removeSubTask(subTask2.getId());
-        taskManager.clearTimeTree();
     }
 
     @Test
@@ -347,14 +332,5 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubTask(subTask2);
 
         assertEquals(List.of(task, subTask), taskManager.getPrioritizedTasks());
-
-        taskManager.removeTask(task.getId());
-        taskManager.removeTask(task2.getId());
-        taskManager.removeTask(task3.getId());
-        taskManager.removeTask(task4.getId());
-        taskManager.removeEpicTask(epicTask.getId());
-        taskManager.removeSubTask(subTask.getId());
-        taskManager.removeSubTask(subTask2.getId());
-        taskManager.clearTimeTree();
     }
 }

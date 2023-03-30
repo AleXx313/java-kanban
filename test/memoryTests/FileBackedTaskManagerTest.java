@@ -1,5 +1,6 @@
 package memoryTests;
 
+import manager.InMemoryTaskManager;
 import managerTests.TaskManagerTest;
 import memory.FileBackedTaskManager;
 
@@ -26,24 +27,27 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
     @BeforeEach
     public void setUp() {
-        taskManager = new FileBackedTaskManager(new File("test/data.csv"));
+        File file = new File("test/data.csv");
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        taskManager = new FileBackedTaskManager(file);
     }
 
-    @AfterAll
-    public static void deleteTestFileAfterAllTests() {
+    @AfterEach
+    public void deleteTestFileAfterTest() {
         try {
             Files.delete(Paths.get("test/data.csv"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    @Override
+
     @AfterEach
-    public void clearStaticContainers() {
-        taskManager.removeSubTask(subTask.getId());
-        taskManager.removeEpicTask(epicTask.getId());
-        taskManager.removeTask(task.getId());
-        taskManager.clearTimeTree();
+    public void clearHistory(){
+        InMemoryTaskManager.clearHistory();
     }
 
     //Проверить загрузку таски, эпика и сабтаски (в файле все есть)
@@ -93,7 +97,6 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     @Test
     public void shouldReturnNullTasksAndEmptyHistoryIfFIleIsEmpty() {
         taskManager.loadFile();
-
         assertNull(taskManager.getTaskById(1));
         assertNull(taskManager.getEpicTaskById(2));
         assertNull(taskManager.getSubTaskById(3));

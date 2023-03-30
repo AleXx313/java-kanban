@@ -12,13 +12,13 @@ import java.util.TreeSet;
 
 public class InMemoryTaskManager implements TaskManager {
     private int idCounter = 1;
-    protected static final HashMap<Integer, Task> tasks = new HashMap<>();
-    protected static final HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
-    protected static final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    protected final HashMap<Integer, Task> tasks = new HashMap<>();
+    protected final HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
+    protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
     protected static final HistoryManager historyManager = Managers.getDefaultHistory();
 
-    protected static final TreeSet<Task> timeTree = new TreeSet<>(new StartTimeComparator());
+    protected final TreeSet<Task> timeTree = new TreeSet<>(new StartTimeComparator());
 
     protected static void setIdCounter(int idCounter) {
         idCounter = idCounter;
@@ -230,8 +230,10 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return overlap;
     }
-    @Override
-    public void clearTimeTree(){
-        timeTree.clear();
+
+    public static void clearHistory(){
+        for (int i = 0; i <= historyManager.getHistory().size(); i++){
+            historyManager.remove(i+1);
+        }
     }
 }
