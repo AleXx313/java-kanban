@@ -17,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HistoryManagerTest {
 
-    protected HistoryManager historyManager;
-    protected Task task;
-    protected EpicTask epicTask;
-    protected SubTask subTask;
+    private HistoryManager historyManager;
+    private Task task;
+    private EpicTask epicTask;
+    private SubTask subTask;
 
     @BeforeEach
     public void createTask() {
@@ -37,9 +37,8 @@ class HistoryManagerTest {
     }
     @AfterEach
     public void clearHistory(){
-        historyManager.remove(1);
-        historyManager.remove(2);
-        historyManager.remove(3);
+        for (int i = 1; i <= 3; i++)
+        historyManager.remove(i);
     }
     //Проверка
     @Test

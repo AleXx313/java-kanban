@@ -29,37 +29,23 @@ class EpicTaskTest {
         sub2 = new SubTask("Test Sub Two", "Test Sub Two Description",
                 LocalDateTime.of(2022,03,29,8,45,0), 60, epic);
     }
-    @AfterEach
-    public void clearStaticContainers(){
-        manager.clearEpicTasks();
-        manager.resetIdCounter();
-        manager.removeEpicTask(epic.getId());
-    }
 
     //Если подзадач нет, то лист с подзадачами пустой, а статус Эпика - NEW;
     @Test
-    public void statusShouldBeNewIfSubTasksListIsEmptyAlsoCheckedTime(){
+    public void statusShouldBeNewIfSubTasksListIsEmpty(){
         manager.createEpicTask(epic);
         assertTrue(epic.getSubTasks().isEmpty(), "Лист подзадач не пустой, хотя подзадач не создавалось!");
         assertEquals(epic.getStatus(), Status.NEW, "Статус эпика не NEW, хотя подзадач нет!");
-        assertEquals(LocalDateTime.MIN, epic.getStartTime(), "Время старта не минимальное, хотя сабтасок нет");
-
     }
 
     //Если у всех подзадач статус NEW, то и у Эпика статус NEW
     @Test
-    public void statusShouldBeNewIfSubtasksStatusIsOnlyNewAlsoCheckedTime(){
+    public void statusShouldBeNewIfSubtasksStatusIsOnlyNew(){
         manager.createEpicTask(epic);
         manager.createSubTask(sub1);
         manager.createSubTask(sub2);
         assertEquals(epic.getStatus(), Status.NEW, "Статус эпика не NEW, хотя статус подзадач не менялся" +
                 "и должен быть NEW!");
-        assertEquals(LocalDateTime.of(2022,03,29,8,0,0),
-                epic.getStartTime());
-        assertEquals(LocalDateTime.of(2022,03,29,9,45,0),
-                epic.getEndTime());
-        assertEquals(Duration.ofMinutes(75), epic.getDuration());
-
     }
 
     //Если у всех подзадач статус DONE, то и у Эпика статус DONE
@@ -99,5 +85,17 @@ class EpicTaskTest {
         manager.updateSubTask(sub2);
         assertEquals(epic.getStatus(), Status.IN_PROGRESS, "Статус эпика не IN_PROGRESS, хотя статус" +
                 "подзадач только IN_PROGRESS!");
+    }
+    @Test
+    public void shouldChangeEpicTimeFieldsDependsOfSubsTime(){
+        manager.createEpicTask(epic);
+        assertEquals(LocalDateTime.MIN, epic.getStartTime(), "Время старта не минимальное, хотя сабтасок нет");
+        manager.createSubTask(sub1);
+        manager.createSubTask(sub2);
+        assertEquals(LocalDateTime.of(2022,03,29,8,0,0),
+                epic.getStartTime());
+        assertEquals(LocalDateTime.of(2022,03,29,9,45,0),
+                epic.getEndTime());
+        assertEquals(Duration.ofMinutes(75), epic.getDuration());
     }
 }
