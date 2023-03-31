@@ -1,8 +1,6 @@
 package managerTests;
 
 import manager.TaskManager;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.EpicTask;
@@ -21,11 +19,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     protected Task task;
     protected EpicTask epicTask;
     protected SubTask subTask;
-
-    @BeforeEach
     public abstract void setUp();
-
-
 
     @BeforeEach
     public void createTask() {

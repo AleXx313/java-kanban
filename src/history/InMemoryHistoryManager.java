@@ -6,7 +6,7 @@ import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private static final CustomLinkedList viewHistory = new CustomLinkedList();
+    private final CustomLinkedList viewHistory = new CustomLinkedList();
 
     @Override
     public void add(Task task) {

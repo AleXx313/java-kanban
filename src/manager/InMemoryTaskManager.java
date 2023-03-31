@@ -16,12 +16,16 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
     protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
-    protected static final HistoryManager historyManager = Managers.getDefaultHistory();
+    protected final HistoryManager historyManager;
 
     protected final TreeSet<Task> timeTree = new TreeSet<>(new StartTimeComparator());
 
-    protected static void setIdCounter(int idCounter) {
-        idCounter = idCounter;
+    public InMemoryTaskManager(){
+        historyManager = Managers.getDefaultHistory();
+    }
+
+    protected void setIdCounter(int idCounter) {
+        this.idCounter = idCounter;
     }
 
     public void resetIdCounter(){
@@ -231,7 +235,7 @@ public class InMemoryTaskManager implements TaskManager {
         return overlap;
     }
 
-    public static void clearHistory(){
+    public void clearHistory(){
         for (int i = 0; i <= historyManager.getHistory().size(); i++){
             historyManager.remove(i+1);
         }

@@ -1,7 +1,9 @@
 package memory;
 
+import history.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 import tasks.*;
+import util.Managers;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -143,12 +145,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     //Метод по преобразованию истории вызовов в строку целых чисел (id).
-    private static String historyToString() {
+    private String historyToString() {
         List<Task> tasks = historyManager.getHistory();
         if (!tasks.isEmpty()){
             StringBuilder builder = new StringBuilder();
             for (Task task : tasks) {
-                builder.append(task.getId() + ",");
+                builder.append(task.getId()).append(",");
             }
             return builder.substring(0, builder.length() - 1);
         }
@@ -232,8 +234,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         List<Integer> history = new ArrayList<>();
         String[] lines = line.split(",");
         if (!lines[0].isBlank()){
-            for (int i = 0; i < lines.length; i++) {
-                history.add(Integer.parseInt(lines[i]));
+            for (String s : lines) {
+                history.add(Integer.parseInt(s));
             }
         }
         return history;

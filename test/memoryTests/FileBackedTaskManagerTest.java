@@ -1,17 +1,13 @@
 package memoryTests;
 
-import manager.InMemoryTaskManager;
 import managerTests.TaskManagerTest;
 import memory.FileBackedTaskManager;
-
-import memory.ManagerSaveException;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import tasks.Status;
 
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
@@ -43,11 +38,6 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @AfterEach
-    public void clearHistory(){
-        InMemoryTaskManager.clearHistory();
     }
 
     //Проверить загрузку таски, эпика и сабтаски (в файле все есть)
