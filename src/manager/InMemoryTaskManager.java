@@ -5,10 +5,7 @@ import tasks.*;
 import util.Managers;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private int idCounter = 1;
@@ -16,11 +13,11 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
     protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
-    protected final HistoryManager historyManager;
+    protected final transient HistoryManager historyManager;
 
     protected final TreeSet<Task> timeTree = new TreeSet<>(new StartTimeComparator());
 
-    public InMemoryTaskManager(){
+    public InMemoryTaskManager() {
         historyManager = Managers.getDefaultHistory();
     }
 
@@ -28,14 +25,10 @@ public class InMemoryTaskManager implements TaskManager {
         this.idCounter = idCounter;
     }
 
-    public void resetIdCounter(){
-        idCounter = 1;
-    }
-
     //Добавляем задачи.
     @Override
     public void createTask(Task task) {
-        if(isOverlapping(task)){
+        if (isOverlapping(task)) {
             System.out.println("Заданный временной отрезок уже используется! Задача не создана!");
             return;
         }
@@ -56,8 +49,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubTask(SubTask subTask) {
-        if(isOverlapping(subTask)){
-            System.out.println("Заданный временной отрезок уже используется! Задача не создана!");
+        if (isOverlapping(subTask)) {
+            System.out.println("Заданный временной отрезок уже используется! Подзадача не создана!");
             return;
         }
         subTask.setStatus(Status.NEW);
@@ -99,12 +92,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<SubTask> getSubTaskListByEpic(EpicTask epicTask) {
-        ArrayList<SubTask> allTasks = new ArrayList<>();
-        for (Integer key : epicTask.getSubTasks().keySet()) {
-            allTasks.add(subTasks.get(key));
+    public ArrayList<SubTask> getSubTaskListByEpic(int id) {
+        if (epicTasks.containsKey(id)){
+            EpicTask epicTask = epicTasks.get(id);
+
+            ArrayList<SubTask> allTasks = new ArrayList<>();
+            for (Integer key : epicTask.getSubTasks().keySet()) {
+                allTasks.add(subTasks.get(key));
+            }
+            return allTasks;
         }
-        return allTasks;
+
+        return new ArrayList<SubTask>();
     }
 
     //Удаляем задачи
@@ -128,7 +127,7 @@ public class InMemoryTaskManager implements TaskManager {
     // Получаем по идентификатору
     @Override
     public Task getTaskById(int id) {
-        if (tasks.containsKey(id)){
+        if (tasks.containsKey(id)) {
             historyManager.add(tasks.get(id));
             return tasks.get(id);
         }
@@ -137,7 +136,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public EpicTask getEpicTaskById(int id) {
-        if (epicTasks.containsKey(id)){
+        if (epicTasks.containsKey(id)) {
             historyManager.add(epicTasks.get(id));
             return epicTasks.get(id);
         }
@@ -146,7 +145,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public SubTask getSubTaskById(int id) {
-        if (subTasks.containsKey(id)){
+        if (subTasks.containsKey(id)) {
             historyManager.add(subTasks.get(id));
             return subTasks.get(id);
         }
@@ -181,7 +180,7 @@ public class InMemoryTaskManager implements TaskManager {
     //Удаляем задачи
     @Override
     public void removeTask(int id) {
-        if(getTaskById(id) != null){
+        if (getTaskById(id) != null) {
             tasks.remove(id);
             historyManager.remove(id);
         }
@@ -189,7 +188,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeEpicTask(int id) {
-        if(getEpicTaskById(id) != null){
+        if (getEpicTaskById(id) != null) {
             for (Integer subTaskId : epicTasks.get(id).getSubTasks().keySet()) {
                 removeSubTask(subTaskId);
                 historyManager.remove(subTaskId);
@@ -201,7 +200,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeSubTask(int id) {
-        if (getSubTaskById(id) != null){
+        if (getSubTaskById(id) != null) {
             EpicTask epicTask = subTasks.get(id).getEpicTask();
             subTasks.remove(id);
             historyManager.remove(id);
@@ -216,28 +215,29 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
+
     @Override
-    public List<Task> getPrioritizedTasks(){
+    public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(timeTree);
     }
 
-    public boolean isOverlapping(Task task){
+    public boolean isOverlapping(Task task) {
         boolean overlap = false;
         List<Task> tasks = getPrioritizedTasks();
-        for (Task taskToCompare : tasks){
+        for (Task taskToCompare : tasks) {
             if (task.getStartTime().isAfter(taskToCompare.getStartTime())
                     && task.getStartTime().isBefore(taskToCompare.getEndTime())
                     || task.getEndTime().isAfter(taskToCompare.getStartTime())
-                    && task.getEndTime().isBefore(taskToCompare.getEndTime())){
+                    && task.getEndTime().isBefore(taskToCompare.getEndTime())) {
                 overlap = true;
             }
         }
         return overlap;
     }
 
-    public void clearHistory(){
-        for (int i = 0; i <= historyManager.getHistory().size(); i++){
-            historyManager.remove(i+1);
+    public void clearHistory() {
+        for (int i = 0; i <= historyManager.getHistory().size(); i++) {
+            historyManager.remove(i + 1);
         }
     }
 }

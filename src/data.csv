@@ -1,10 +1,4 @@
-id,type,name,status,description,epic
-1,Task,ТЗ,NEW,Нужно дописать ТЗ
-2,Task,Книга,NEW,Нужно дочитать книгу
-3,EpicTask,Поклеить обои,NEW,Нужно поклеить обои
-7,EpicTask,Поход за продуктами,NEW,Необходимо сходить за продуктами
-4,SubTask,Покупка обоев,NEW,Нужно купить обои,3
-5,SubTask,Поклейка,NEW,Нужно поклеить обои,3
-6,SubTask,Любование,NEW,Нужно полюбоваться новыми обоями,3
+id,type,name,status,description,startTime,duration,epic
+2,Task,Task1,null,Task1 Desc,02.01.2022.00.00.00,900
+1,Task,EpicTask1,NEW,EpicTask1 Desc,01.01.+100000000.00.00.00,0
 
-4,5,6,1,2,3,7

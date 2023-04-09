@@ -89,7 +89,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, subTasks.size(), "Неверное количество подзадач.");
         assertEquals(subTask, subTasks.get(0), "Подзадачи не совпадают.");
 
-        final List<SubTask> subTasksByEpic = taskManager.getSubTaskListByEpic(epicTask);
+        final List<SubTask> subTasksByEpic = taskManager.getSubTaskListByEpic(1);
         assertNotNull(subTasks, "Подзадачи по эпику не возвращаются.");
         assertEquals(1, subTasksByEpic.size(), "Неверное количество подзадач по эпику.");
         assertEquals(subTask, subTasksByEpic.get(0), "Подзадачи по эпику не совпадают.");
@@ -170,7 +170,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     //Получение листа сабок до создания
     @Test
     void shouldReturnEmptyListsWhenThereWasNoSubTaskCreated() {
-        assertEquals(Collections.EMPTY_LIST, taskManager.getSubTaskListByEpic(epicTask),
+        assertEquals(Collections.EMPTY_LIST, taskManager.getSubTaskListByEpic(2),
                 "Лист с подзадачами не пустой!");
     }
 
@@ -239,14 +239,14 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(Collections.EMPTY_LIST, taskManager.getTaskList(), "Лист с задачами не пустой!");
         assertEquals(Collections.EMPTY_LIST, taskManager.getEpicTaskList(), "Лист с эпиками не пустой!");
         assertEquals(Collections.EMPTY_LIST, taskManager.getSubTaskList(), "Лист с подзадачами не пустой!");
-        assertEquals(Collections.EMPTY_LIST, taskManager.getSubTaskListByEpic(epicTask),
+        assertEquals(Collections.EMPTY_LIST, taskManager.getSubTaskListByEpic(2),
                 "Лист с подзадачами не пустой!");
 
         taskManager.createEpicTask(epicTask);
         taskManager.createSubTask(subTask);
         taskManager.removeSubTask(subTask.getId());
         assertEquals(Collections.EMPTY_LIST, taskManager.getSubTaskList(), "Лист с подзадачами не пустой!");
-        assertEquals(Collections.EMPTY_LIST, taskManager.getSubTaskListByEpic(epicTask),
+        assertEquals(Collections.EMPTY_LIST, taskManager.getSubTaskListByEpic(2),
                 "Лист с подзадачами не пустой!");
     }
     //Проверка получения списка истории

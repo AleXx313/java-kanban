@@ -7,9 +7,9 @@ import java.util.HashMap;
 
 public class EpicTask extends Task {
 
-    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private transient final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
-    private LocalDateTime endTime;
+    private transient LocalDateTime endTime;
 
     public EpicTask(String title, String description, LocalDateTime startTime, int duration) {
         super(title, description, startTime, duration);

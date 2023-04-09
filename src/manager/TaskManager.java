@@ -16,7 +16,7 @@ public interface TaskManager {
     ArrayList<Task> getTaskList();
     ArrayList<EpicTask> getEpicTaskList();
     ArrayList<SubTask> getSubTaskList();
-    ArrayList<SubTask> getSubTaskListByEpic(EpicTask epicTask);
+    ArrayList<SubTask> getSubTaskListByEpic(int id);
 
     //Удаляем задачи
     void clearTasks();
@@ -40,8 +40,6 @@ public interface TaskManager {
 
     //Получаем историю просмотров
     List<Task> getHistory();
-
-    void resetIdCounter();
 
     List<Task> getPrioritizedTasks();
 

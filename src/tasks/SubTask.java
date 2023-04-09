@@ -20,6 +20,6 @@ public class SubTask extends Task {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.HH.mm.ss");
         return String.format("%d,Task,%s,%s,%s,%s,%d,%d", id, title, status, description, startTime.format(formatter),
-                duration.getSeconds(), epicTask.id);
+                duration.getSeconds(), epicTask.getId());
     }
 }
