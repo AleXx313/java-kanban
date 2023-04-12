@@ -23,6 +23,7 @@ class EpicTaskTest {
         manager = new InMemoryTaskManager();
         epic = new EpicTask("Test Epic", "Test Epic Description",
                 LocalDateTime.of(2022,03,29,8,0,0), 60);
+        epic.setId(1);
         sub1 = new SubTask("Test Sub One", "Test Sub One Description",
                 LocalDateTime.of(2022,03,29,8,0,0), 15, epic);
         sub2 = new SubTask("Test Sub Two", "Test Sub Two Description",
@@ -88,7 +89,7 @@ class EpicTaskTest {
     @Test
     public void shouldChangeEpicTimeFieldsDependsOfSubsTime(){
         manager.createEpicTask(epic);
-        assertEquals(LocalDateTime.MIN, epic.getStartTime(), "Время старта не минимальное, хотя сабтасок нет");
+        assertEquals(LocalDateTime.MIN.plusYears(10000), epic.getStartTime(), "Время старта не минимальное, хотя сабтасок нет");
         manager.createSubTask(sub1);
         manager.createSubTask(sub2);
         assertEquals(LocalDateTime.of(2022,03,29,8,0,0),

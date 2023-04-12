@@ -10,18 +10,10 @@ import java.io.IOException;
 public class StatusAdapter extends TypeAdapter<Status> {
     @Override
     public void write(JsonWriter jsonWriter, Status status) throws IOException {
-        if (status != null){
-            jsonWriter.value(status.toString());
-        } else {
-            jsonWriter.value("null");
-        }
+        jsonWriter.value(status.toString());
     }
     @Override
     public Status read(JsonReader jsonReader) throws IOException {
-        if (jsonReader.nextString().equals("null")){
-            return Status.NEW;
-        } else {
             return Status.valueOf(jsonReader.nextString());
-        }
     }
 }

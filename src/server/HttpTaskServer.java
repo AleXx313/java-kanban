@@ -27,23 +27,22 @@ public class HttpTaskServer {
 
     private static final int PORT = 8080;
 
-    private final TaskManager taskManager;
+    private TaskManager taskManager;
     private Gson gson;
     private HttpServer server;
 
     public HttpTaskServer() throws IOException {
         taskManager = Managers.getFileBackedTaskManager(new File("src/data.csv"));
-        gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .serializeNulls()
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .registerTypeAdapter(Status.class, new StatusAdapter())
-                .setPrettyPrinting()
-                .create();
+        gson = Managers.getDefaultGson();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/tasks/task", this::handleTasks);
         server.createContext("/tasks/subtask", this::handleSubtasks);
         server.createContext("/tasks/epic", this::handleEpics);
         server.createContext("/tasks", this::handleInfo);
+    }
+    public HttpTaskServer(TaskManager taskManager) throws IOException {
+        this();
+        this.taskManager = taskManager;
     }
 
     private void handleTasks(HttpExchange h){
@@ -79,11 +78,11 @@ public class HttpTaskServer {
                         if (task.getId() != 0){
                             taskManager.updateTask(task);
                             System.out.println("Задача с id " + task.getId() + " обновлена.");
-                            h.sendResponseHeaders(200, 0);
+                            h.sendResponseHeaders(201, 0);
                         } else {
                             taskManager.createTask(task);
                             System.out.println("Задача создана, ей присвоен id " + task.getId() + ".");
-                            h.sendResponseHeaders(200, 0);
+                            h.sendResponseHeaders(201, 0);
                         }
                     } else {
                         h.sendResponseHeaders(405, 0);
@@ -165,11 +164,11 @@ public class HttpTaskServer {
                         if (subTask.getId() != 0){
                             taskManager.updateSubTask(subTask);
                             System.out.println("Задача с id " + subTask.getId() + " обновлена.");
-                            h.sendResponseHeaders(200, 0);
+                            h.sendResponseHeaders(201, 0);
                         } else {
                             taskManager.createSubTask(subTask);
                             System.out.println("Задача создана, ей присвоен id " + subTask.getId() + ".");
-                            h.sendResponseHeaders(200, 0);
+                            h.sendResponseHeaders(201, 0);
                         }
                     } else {
                         h.sendResponseHeaders(405, 0);
@@ -241,11 +240,11 @@ public class HttpTaskServer {
                         if (epicTask.getId() != 0){
                             taskManager.updateEpicTask(epicTask);
                             System.out.println("Задача с id " + epicTask.getId() + " обновлена.");
-                            h.sendResponseHeaders(200, 0);
+                            h.sendResponseHeaders(201, 0);
                         } else {
                             taskManager.createEpicTask(epicTask);
                             System.out.println("Задача создана, ей присвоен id " + epicTask.getId() + ".");
-                            h.sendResponseHeaders(200, 0);
+                            h.sendResponseHeaders(201, 0);
                         }
                     } else {
                         h.sendResponseHeaders(405, 0);

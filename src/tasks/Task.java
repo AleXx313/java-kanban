@@ -1,16 +1,24 @@
 package tasks;
 
+import com.google.gson.annotations.Expose;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Task {
 
+    @Expose
     protected final String title;
+    @Expose
     protected final String description;
+    @Expose
     protected int id = 0;
+    @Expose
     protected Status status;
+    @Expose
     protected LocalDateTime startTime;
+    @Expose
     protected Duration duration;
 
     public Task(String title, String description, LocalDateTime startTime, int minutes) {
@@ -18,6 +26,7 @@ public class Task {
         this.description = description;
         this.startTime = startTime;
         this.duration = Duration.ofMinutes(minutes);
+        status = Status.NEW;
     }
 
     public String getTitle() {

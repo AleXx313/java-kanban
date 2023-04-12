@@ -1,5 +1,7 @@
 package tasks;
 
+import com.google.gson.annotations.Expose;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,15 +9,23 @@ import java.util.HashMap;
 
 public class EpicTask extends Task {
 
-    private transient final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    @Expose
+    private final HashMap<Integer, SubTask> subTasks;
 
-    private transient LocalDateTime endTime;
+    private LocalDateTime endTime;
 
     public EpicTask(String title, String description, LocalDateTime startTime, int duration) {
         super(title, description, startTime, duration);
-        this.startTime = LocalDateTime.MIN;
+        this.startTime = LocalDateTime.MIN.plusYears(10000);
         this.duration = Duration.ofMinutes(0);
+        subTasks = new HashMap<>();
 
+    }
+
+    public void setEpicIdForSubTasks(){
+        for (SubTask subTask : subTasks.values()){
+            subTask.setEpicTaskId(this.id);
+        }
     }
 
     public HashMap<Integer, SubTask> getSubTasks() {

@@ -1,12 +1,17 @@
 package util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import history.HistoryManager;
 import history.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 import manager.TaskManager;
 import memory.FileBackedTaskManager;
+import tasks.Status;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Managers {
 
@@ -26,5 +31,14 @@ public class Managers {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
         manager.loadFile();
         return manager;
+    }
+    public static Gson getDefaultGson(){
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .registerTypeAdapter(Status.class, new StatusAdapter())
+                .excludeFieldsWithoutExposeAnnotation()
+                .setPrettyPrinting()
+                .create();
+        return gson;
     }
 }

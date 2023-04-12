@@ -1,17 +1,10 @@
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import manager.TaskManager;
 import tasks.EpicTask;
-import tasks.Status;
 import tasks.SubTask;
 import tasks.Task;
-import util.DurationAdapter;
-import util.LocalDateTimeAdapter;
 import util.Managers;
-import util.StatusAdapter;
 
-import java.net.URI;
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Runner {
@@ -32,12 +25,6 @@ public class Runner {
                 , LocalDateTime.of(2022, 1,1,0,0,0), 15);
         EpicTask epicTask2 = new EpicTask("EpicTask2", "EpicTask2 Desc"
                 , LocalDateTime.of(2022, 1,1,0,0,0), 15);
-        SubTask subTask1 = new SubTask("SubTask1", "SubTask1 Desc"
-                , LocalDateTime.of(2022, 1,1,4,0,0), 15, epicTask1);
-        SubTask subTask2 = new SubTask("SubTask2", "SubTask2 Desc"
-                , LocalDateTime.of(2022, 1,1,5,0,0), 15, epicTask1);
-        SubTask subTask3 = new SubTask("SubTask3", "SubTask3 Desc"
-                , LocalDateTime.of(2022, 1,1,6,0,0), 15, epicTask2);
 
         manager.createTask(task1);
         manager.createTask(task2);
@@ -45,6 +32,15 @@ public class Runner {
         manager.createTask(task4);
         manager.createEpicTask(epicTask1);
         manager.createEpicTask(epicTask2);
+
+        SubTask subTask1 = new SubTask("SubTask1", "SubTask1 Desc"
+                , LocalDateTime.of(2022, 1,1,4,0,0), 15, epicTask1);
+        SubTask subTask2 = new SubTask("SubTask2", "SubTask2 Desc"
+                , LocalDateTime.of(2022, 1,1,5,0,0), 15, epicTask1);
+        SubTask subTask3 = new SubTask("SubTask3", "SubTask3 Desc"
+                , LocalDateTime.of(2022, 1,1,6,0,0), 15, epicTask2);
+
+
         manager.createSubTask(subTask1);
         manager.createSubTask(subTask2);
         manager.createSubTask(subTask3);
@@ -57,14 +53,18 @@ public class Runner {
         manager.getTaskById(1);
         manager.getSubTaskById(7);
         manager.getSubTaskById(8);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .registerTypeAdapter(Status.class, new StatusAdapter())
-                .setPrettyPrinting()
-                .create();
-        String managerJson = gson.toJson(manager);
-        System.out.println(managerJson);
+
+        manager.removeEpicTask(5);
+
+//        Gson gson = Managers.getDefaultGson();
+//        String managerJson = gson.toJson(subTask1);
+//        System.out.println(managerJson);
+//        SubTask subtask = gson.fromJson(managerJson, SubTask.class);
+//
+//        manager.createSubTask(subtask);
+//        List<SubTask> list = gson.fromJson(managerJson, ArrayList.class);
+//
+//        System.out.println(list);
 
 
 

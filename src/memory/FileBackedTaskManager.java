@@ -195,6 +195,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         throw new IllegalStateException("Непредвиденная ошибка. Дата файл поврежден!");
                 }
                 idCounter++;
+
             }
             setIdCounter(idCounter);
             loadHistory(lines.get(lines.size() - 1));
@@ -269,6 +270,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         int minutes = (int) duration.toMinutes();
         SubTask subTask = new SubTask(taskStringArray[2], taskStringArray[4], startTime, minutes
                 , epicTasks.get(Integer.parseInt(taskStringArray[7])));
+        subTask.setEpicTaskId(Integer.parseInt(taskStringArray[7]));
         subTask.setStatus(Status.valueOf(taskStringArray[3]));
         subTask.setId(Integer.parseInt(taskStringArray[0]));
         subTasks.put(Integer.parseInt(taskStringArray[0]), subTask);

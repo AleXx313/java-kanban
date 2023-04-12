@@ -73,6 +73,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void testCreateNewSubTaskMethod() {
         taskManager.createEpicTask(epicTask);
+        subTask.setEpicTaskId(epicTask.getId());
         taskManager.createSubTask(subTask);
         final int subTaskId = subTask.getId();
         final SubTask savedSubTask = taskManager.getSubTaskById(subTaskId);
@@ -153,6 +154,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void testToGetSubTaskByIdWithExistId() {
         taskManager.createEpicTask(epicTask);
+        subTask.setEpicTaskId(epicTask.getId());
         taskManager.createSubTask(subTask);
         final int subTaskId = subTask.getId();
         SubTask taskExpected = taskManager.getSubTaskById(subTaskId);
@@ -190,6 +192,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void shouldReturnEmptyListsWhenListWithSubTasksWasCleared() {
         taskManager.createEpicTask(epicTask);
+        subTask.setEpicTaskId(epicTask.getId());
         taskManager.createSubTask(subTask);
         taskManager.clearSubTasks();
         assertEquals(Collections.EMPTY_LIST, taskManager.getEpicTaskList(), "Лист с эпиками не пустой!");
@@ -243,6 +246,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "Лист с подзадачами не пустой!");
 
         taskManager.createEpicTask(epicTask);
+        subTask.setEpicTaskId(epicTask.getId());
         taskManager.createSubTask(subTask);
         taskManager.removeSubTask(subTask.getId());
         assertEquals(Collections.EMPTY_LIST, taskManager.getSubTaskList(), "Лист с подзадачами не пустой!");
@@ -271,6 +275,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldRemoveEpicAndSubByEpicIdIfEpicWithIdExist(){
         taskManager.createEpicTask(epicTask);
+        subTask.setEpicTaskId(epicTask.getId());
         taskManager.createSubTask(subTask);
         taskManager.removeEpicTask(epicTask.getId());
         assertNull(taskManager.getEpicTaskById(epicTask.getId()));
@@ -280,6 +285,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldRemoveSubByIdIfSubWithIdExist(){
         taskManager.createEpicTask(epicTask);
+        subTask.setEpicTaskId(epicTask.getId());
         taskManager.createSubTask(subTask);
         taskManager.removeSubTask(subTask.getId());
         assertNotNull(taskManager.getEpicTaskById(epicTask.getId()));
@@ -301,7 +307,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createTask(task3);
         taskManager.createTask(task4);
         taskManager.createEpicTask(epicTask);
+        subTask.setEpicTaskId(epicTask.getId());
         taskManager.createSubTask(subTask);
+        subTask2.setEpicTaskId(epicTask.getId());
         taskManager.createSubTask(subTask2);
 
         assertEquals(List.of(task4, task3, task2, task, subTask, subTask2), taskManager.getPrioritizedTasks());
