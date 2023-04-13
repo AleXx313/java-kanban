@@ -12,8 +12,9 @@ public class StatusAdapter extends TypeAdapter<Status> {
     public void write(JsonWriter jsonWriter, Status status) throws IOException {
         jsonWriter.value(status.toString());
     }
+
     @Override
     public Status read(JsonReader jsonReader) throws IOException {
-            return Status.valueOf(jsonReader.nextString());
+        return Status.valueOf(jsonReader.nextString());
     }
 }

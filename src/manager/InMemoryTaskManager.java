@@ -8,7 +8,7 @@ import util.Managers;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int idCounter = 1;
+    protected int idCounter = 1;
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
     protected final HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
     protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
@@ -93,7 +93,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<SubTask> getSubTaskListByEpic(int id) {
-        if (epicTasks.containsKey(id)){
+        if (epicTasks.containsKey(id)) {
             EpicTask epicTask = epicTasks.get(id);
 
             ArrayList<SubTask> allTasks = new ArrayList<>();
@@ -192,7 +192,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (getEpicTaskById(id) != null) {
 
             List<Integer> subtasksId = new ArrayList<>(epicTasks.get(id).getSubTasks().keySet());
-            for (Integer subId : subtasksId){
+            for (Integer subId : subtasksId) {
                 removeSubTask(subId);
                 historyManager.remove(subId);
             }
@@ -237,17 +237,5 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         return overlap;
-    }
-
-    public void clearHistory() {
-        for (int i = 0; i <= historyManager.getHistory().size(); i++) {
-            historyManager.remove(i + 1);
-        }
-    }
-    public EpicTask utilGetEpicBydId(int id){
-        if (epicTasks.containsKey(id)) {
-            return epicTasks.get(id);
-        }
-        return null;
     }
 }

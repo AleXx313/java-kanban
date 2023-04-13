@@ -25,6 +25,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         data = file;
     }
 
+    public FileBackedTaskManager(){
+        super();
+    }
+
     public static String getPath() {
         return data.getPath();
     }
@@ -156,7 +160,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     //Метод по записи данных в файл.
-    private void save() {
+    protected void save() {
         List<String> tasks = convertTasksToStrings();
         try (FileWriter writer = new FileWriter(data, StandardCharsets.UTF_8)) {
             writer.write("id,type,name,status,description,startTime,duration,epic\n"); //Именование колонок.

@@ -42,13 +42,18 @@ public class KVServer {
                     h.sendResponseHeaders(400, 0);
                     return;
                 }
-                String value = readText(h);
-                if (value.isEmpty()) {
-                    System.out.println("Value для загрузки пустой. value указывается в теле запроса");
+
+                if (data.get(key).isEmpty()) {
+                    System.out.println("Данные отсутствуют.");
                     h.sendResponseHeaders(400, 0);
                     return;
                 }
-
+                sendText(h, data.get(key));
+                System.out.println("Значение для ключа " + key + " успешно загружено!");
+                h.sendResponseHeaders(200, 0);
+            } else {
+                System.out.println("/load ждёт GET-запрос, а получил: " + h.getRequestMethod());
+                h.sendResponseHeaders(405, 0);
             }
         } finally {
             h.close();
@@ -127,5 +132,10 @@ public class KVServer {
         h.getResponseHeaders().add("Content-Type", "application/json");
         h.sendResponseHeaders(200, resp.length);
         h.getResponseBody().write(resp);
+    }
+
+    public void stop(){
+        System.out.println("Остановлен сервер на порту " + PORT);
+        server.stop(0);
     }
 }

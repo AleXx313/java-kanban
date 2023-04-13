@@ -22,8 +22,8 @@ public class EpicTask extends Task {
 
     }
 
-    public void setEpicIdForSubTasks(){
-        for (SubTask subTask : subTasks.values()){
+    public void setEpicIdForSubTasks() {
+        for (SubTask subTask : subTasks.values()) {
             subTask.setEpicTaskId(this.id);
         }
     }
@@ -32,34 +32,34 @@ public class EpicTask extends Task {
         return subTasks;
     }
 
-    public void setTimeBySubtasks(){
+    public void setTimeBySubtasks() {
         setDurationBySubTasks();
         setEndTimeBySubTasks();
         setStartTimeBySubTasks();
     }
 
-    private void setDurationBySubTasks(){
+    private void setDurationBySubTasks() {
         Duration duration = Duration.ofMinutes(0);
-        for (SubTask subTask : subTasks.values()){
+        for (SubTask subTask : subTasks.values()) {
             duration = duration.plus(subTask.getDuration());
         }
         this.duration = duration;
     }
 
-    private void setStartTimeBySubTasks(){
+    private void setStartTimeBySubTasks() {
         LocalDateTime startTime = LocalDateTime.MAX;
-        for (SubTask subTask : subTasks.values()){
-            if(subTask.getStartTime().isBefore(startTime)){
+        for (SubTask subTask : subTasks.values()) {
+            if (subTask.getStartTime().isBefore(startTime)) {
                 startTime = subTask.getStartTime();
             }
         }
         this.startTime = startTime;
     }
 
-    private void setEndTimeBySubTasks(){
+    private void setEndTimeBySubTasks() {
         LocalDateTime endTime = LocalDateTime.MIN;
-        for (SubTask subTask : subTasks.values()){
-            if(subTask.getEndTime().isAfter(endTime)){
+        for (SubTask subTask : subTasks.values()) {
+            if (subTask.getEndTime().isAfter(endTime)) {
                 endTime = subTask.getEndTime();
             }
         }
@@ -67,22 +67,23 @@ public class EpicTask extends Task {
     }
 
     @Override
-    public LocalDateTime getEndTime(){
+    public LocalDateTime getEndTime() {
         return this.endTime;
     }
-    public void setStatusBySubtasks(){
-        if (isDoneCheck()){
+
+    public void setStatusBySubtasks() {
+        if (isDoneCheck()) {
             setStatus(Status.DONE);
             return;
         }
         boolean isInProgress = false;
-        for (SubTask subTask : subTasks.values()){
-            if (subTask.getStatus().equals(Status.IN_PROGRESS) || subTask.getStatus().equals(Status.DONE)){
+        for (SubTask subTask : subTasks.values()) {
+            if (subTask.getStatus().equals(Status.IN_PROGRESS) || subTask.getStatus().equals(Status.DONE)) {
                 isInProgress = true;
                 break;
             }
         }
-        if (isInProgress){
+        if (isInProgress) {
             setStatus(Status.IN_PROGRESS);
         } else {
             setStatus(Status.NEW);

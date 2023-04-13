@@ -7,6 +7,7 @@ import history.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 import manager.TaskManager;
 import memory.FileBackedTaskManager;
+import server.HttpTaskManager;
 import tasks.Status;
 
 import java.io.File;
@@ -19,20 +20,27 @@ public class Managers {
     private static TaskManager manager;
 
     private static FileBackedTaskManager fileBackedTaskManager;
-    public static TaskManager getDefault(){
-        return new InMemoryTaskManager();
+
+    public static TaskManager getDefault() {
+        return new HttpTaskManager("http://localhost:8078");
+
     }
 
-    public static HistoryManager getDefaultHistory(){
+    public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
 
-    public static TaskManager getFileBackedTaskManager(File file){
+    public static TaskManager getDefaultInMemory() {
+        return new InMemoryTaskManager();
+    }
+
+    public static TaskManager getFileBackedTaskManager(File file) {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
         manager.loadFile();
         return manager;
     }
-    public static Gson getDefaultGson(){
+
+    public static Gson getDefaultGson() {
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
                 .registerTypeAdapter(Status.class, new StatusAdapter())
@@ -41,4 +49,5 @@ public class Managers {
                 .create();
         return gson;
     }
+
 }

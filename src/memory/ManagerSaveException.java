@@ -1,8 +1,8 @@
 package memory;
 
-public class ManagerSaveException extends RuntimeException{
+public class ManagerSaveException extends RuntimeException {
 
-    public ManagerSaveException(String message){
+    public ManagerSaveException(String message) {
         super(message);
     }
 }

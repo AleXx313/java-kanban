@@ -49,14 +49,15 @@ public class Task {
         this.id = id;
     }
 
-    public LocalDateTime getStartTime(){
+    public LocalDateTime getStartTime() {
         return this.startTime;
     }
-    public Duration getDuration(){
+
+    public Duration getDuration() {
         return this.duration;
     }
 
-    public LocalDateTime getEndTime(){
+    public LocalDateTime getEndTime() {
         return startTime.plus(duration);
     }
 

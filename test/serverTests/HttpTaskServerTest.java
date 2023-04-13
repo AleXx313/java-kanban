@@ -23,8 +23,10 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HttpTaskServerTest {
 
@@ -38,7 +40,7 @@ class HttpTaskServerTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        manager = Managers.getDefault();
+        manager = Managers.getDefaultInMemory();
         server = new HttpTaskServer(manager);
 
         task = new Task("Task1", "Task1 Desc"
@@ -57,7 +59,7 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void testTasksTaskEndpoint() throws IOException, InterruptedException {
+    void testTaskEndpoint() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         URI uri = URI.create("http://localhost:8080/tasks/task");
         String json1 = gson.toJson(task);
@@ -79,7 +81,7 @@ class HttpTaskServerTest {
 
         HttpRequest getRequest = HttpRequest.newBuilder().uri(uri).GET().build();
         HttpResponse<String> getResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, post1Response.statusCode());
+        assertEquals(201, post1Response.statusCode());
         Type taskType = new TypeToken< ArrayList<Task> >() {}.getType();
         List<Task> actual = gson.fromJson(getResponse.body(), taskType);
         assertNotNull(actual);
@@ -99,7 +101,7 @@ class HttpTaskServerTest {
         assertTrue(manager.getTaskList().isEmpty());
     }
     @Test
-    void testSubTasksTaskEndpoint() throws IOException, InterruptedException {
+    void testSubTaskEndpoint() throws IOException, InterruptedException {
         manager.createEpicTask(epic);
         subTask = new SubTask("SubTask1", "SubTask1 Desc"
                 , LocalDateTime.of(2022, 1,1,4,0,0), 15, epic);
@@ -196,5 +198,38 @@ class HttpTaskServerTest {
         assertTrue(manager.getSubTaskList().isEmpty());
         assertTrue(manager.getEpicTaskList().isEmpty());
         assertNull(manager.getSubTaskById(1));
+    }
+
+    @Test
+    void testInfoEndpoint() throws IOException, InterruptedException {
+        manager.createTask(task);
+        manager.createEpicTask(epic);
+        subTask.setEpicTaskId(epic.getId());
+        SubTask subTask2 = new SubTask("SubTask1", "SubTask1 Desc"
+                , LocalDateTime.of(2022, 1,1,6,0,0), 15, epic);
+        manager.createSubTask(subTask);
+        manager.createSubTask(subTask2);
+        manager.getTaskById(1);
+        manager.getEpicTaskById(2);
+        manager.getSubTaskById(3);
+        manager.getSubTaskById(4);
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI uri = URI.create("http://localhost:8080/tasks");
+        HttpRequest getRequest = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> getResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, getResponse.statusCode());
+        Type listType = new TypeToken<List<Task>>() {}.getType();
+        List<Task> actual = gson.fromJson(getResponse.body(), listType);
+        assertFalse(actual.isEmpty());
+        assertEquals(3, actual.size());
+
+        uri = URI.create("http://localhost:8080/tasks/history");
+        HttpRequest getHistoryRequest = HttpRequest.newBuilder().uri(uri).GET().build();
+        HttpResponse<String> getHistoryResponse = client.send(getHistoryRequest, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, getHistoryResponse.statusCode());
+        List<Task> actual1 = gson.fromJson(getHistoryResponse.body(), listType);
+        assertFalse(actual1.isEmpty());
+        assertEquals(4, actual1.size());
     }
 }

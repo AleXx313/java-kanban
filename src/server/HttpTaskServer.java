@@ -1,24 +1,17 @@
 package server;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import manager.TaskManager;
 import tasks.EpicTask;
-import tasks.Status;
 import tasks.SubTask;
 import tasks.Task;
-import util.DurationAdapter;
-import util.LocalDateTimeAdapter;
 import util.Managers;
-import util.StatusAdapter;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -324,7 +317,7 @@ public class HttpTaskServer {
         server.start();
     }
 
-    public void stop(){
+    public void stop() {
         System.out.println("Остановлен сервер на порту " + PORT);
         server.stop(0);
     }
