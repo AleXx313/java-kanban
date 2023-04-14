@@ -19,20 +19,17 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HttpTaskServerTest {
 
     private HttpTaskServer server;
     private TaskManager manager;
-    private Gson gson = Managers.getDefaultGson();
+    private final Gson gson = Managers.getDefaultGson();
 
     private Task task;
     private EpicTask epic;
@@ -62,26 +59,26 @@ class HttpTaskServerTest {
     void testTaskEndpoint() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         URI uri = URI.create("http://localhost:8080/tasks/task");
-        String json1 = gson.toJson(task);
-        final HttpRequest.BodyPublisher body1 = HttpRequest.BodyPublishers.ofString(json1);
-        HttpRequest post1Request = HttpRequest.newBuilder().uri(uri).POST(body1).build();
-        HttpResponse<String> post1Response = client.send(post1Request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, post1Response.statusCode());
+        String taskToSave = gson.toJson(task);
+        final HttpRequest.BodyPublisher postTaskBody = HttpRequest.BodyPublishers.ofString(taskToSave);
+        HttpRequest requestToPostTask = HttpRequest.newBuilder().uri(uri).POST(postTaskBody).build();
+        HttpResponse<String> responseToPostTask = client.send(requestToPostTask, HttpResponse.BodyHandlers.ofString());
+        assertEquals(201, responseToPostTask.statusCode());
         assertEquals(1, manager.getTaskList().get(0).getId());
         assertEquals("Task1", manager.getTaskList().get(0).getTitle());
 
         task = manager.getTaskList().get(0);
         task.setStatus(Status.IN_PROGRESS);
-        String json2 = gson.toJson(task);
-        final HttpRequest.BodyPublisher body2 = HttpRequest.BodyPublishers.ofString(json2);
-        HttpRequest post2Request = HttpRequest.newBuilder().uri(uri).POST(body2).build();
-        HttpResponse<String> post2Response = client.send(post2Request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, post2Response.statusCode());
+        String taskToUpdate = gson.toJson(task);
+        final HttpRequest.BodyPublisher taskToUpdateBody = HttpRequest.BodyPublishers.ofString(taskToUpdate);
+        HttpRequest requestToUpdateTask = HttpRequest.newBuilder().uri(uri).POST(taskToUpdateBody).build();
+        HttpResponse<String> responseToUpdateTask = client.send(requestToUpdateTask, HttpResponse.BodyHandlers.ofString());
+        assertEquals(201, responseToUpdateTask.statusCode());
         assertEquals(Status.IN_PROGRESS, manager.getTaskList().get(0).getStatus());
 
         HttpRequest getRequest = HttpRequest.newBuilder().uri(uri).GET().build();
         HttpResponse<String> getResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, post1Response.statusCode());
+        assertEquals(200, getResponse.statusCode());
         Type taskType = new TypeToken< ArrayList<Task> >() {}.getType();
         List<Task> actual = gson.fromJson(getResponse.body(), taskType);
         assertNotNull(actual);
@@ -107,21 +104,21 @@ class HttpTaskServerTest {
                 , LocalDateTime.of(2022, 1,1,4,0,0), 15, epic);
         HttpClient client = HttpClient.newHttpClient();
         URI uri = URI.create("http://localhost:8080/tasks/subtask");
-        String json1 = gson.toJson(subTask);
-        final HttpRequest.BodyPublisher body1 = HttpRequest.BodyPublishers.ofString(json1);
-        HttpRequest post1Request = HttpRequest.newBuilder().uri(uri).POST(body1).build();
-        HttpResponse<String> post1Response = client.send(post1Request, HttpResponse.BodyHandlers.ofString());
+        String epicToSave = gson.toJson(subTask);
+        final HttpRequest.BodyPublisher epicToSaveBody = HttpRequest.BodyPublishers.ofString(epicToSave);
+        HttpRequest requestToPostEpic = HttpRequest.newBuilder().uri(uri).POST(epicToSaveBody).build();
+        HttpResponse<String> responseToPostEpic = client.send(requestToPostEpic, HttpResponse.BodyHandlers.ofString());
         subTask = manager.getSubTaskById(2);
-        assertEquals(201, post1Response.statusCode());
+        assertEquals(201, responseToPostEpic.statusCode());
         assertEquals(2, manager.getSubTaskList().get(0).getId());
         assertEquals("SubTask1", manager.getSubTaskList().get(0).getTitle());
         assertEquals(manager.getEpicTaskById(1).getSubTasks().get(2), subTask);
 
         subTask.setStatus(Status.IN_PROGRESS);
-        String json2 = gson.toJson(subTask);
-        final HttpRequest.BodyPublisher body2 = HttpRequest.BodyPublishers.ofString(json2);
-        HttpRequest post2Request = HttpRequest.newBuilder().uri(uri).POST(body2).build();
-        HttpResponse<String> post2Response = client.send(post2Request, HttpResponse.BodyHandlers.ofString());
+        String epicToUpdate = gson.toJson(subTask);
+        final HttpRequest.BodyPublisher updateEpicBody = HttpRequest.BodyPublishers.ofString(epicToUpdate);
+        HttpRequest requestToUpdateEpic = HttpRequest.newBuilder().uri(uri).POST(updateEpicBody).build();
+        client.send(requestToUpdateEpic, HttpResponse.BodyHandlers.ofString());
         epic = manager.getEpicTaskById(1);
         assertEquals(Status.IN_PROGRESS, epic.getStatus());
         assertEquals(Status.IN_PROGRESS, subTask.getStatus());
@@ -154,12 +151,12 @@ class HttpTaskServerTest {
     void testEpicTaskEndpoint() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         URI uri = URI.create("http://localhost:8080/tasks/epic");
-        String json1 = gson.toJson(epic);
-        final HttpRequest.BodyPublisher body1 = HttpRequest.BodyPublishers.ofString(json1);
-        HttpRequest post1Request = HttpRequest.newBuilder().uri(uri).POST(body1).build();
-        HttpResponse<String> post1Response = client.send(post1Request, HttpResponse.BodyHandlers.ofString());
+        String subTaskToSave = gson.toJson(epic);
+        final HttpRequest.BodyPublisher postSubTaskBody = HttpRequest.BodyPublishers.ofString(subTaskToSave);
+        HttpRequest requestToPostSubTask = HttpRequest.newBuilder().uri(uri).POST(postSubTaskBody).build();
+        HttpResponse<String> responseToPostSubTask = client.send(requestToPostSubTask, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals(201, post1Response.statusCode());
+        assertEquals(201, responseToPostSubTask.statusCode());
         assertEquals(1, manager.getEpicTaskList().get(0).getId());
         assertEquals("EpicTask1", manager.getEpicTaskList().get(0).getTitle());
         epic = manager.getEpicTaskById(1);
@@ -170,10 +167,10 @@ class HttpTaskServerTest {
         manager.createSubTask(subTask);
         manager.createSubTask(subTask2);
 
-        String json2 = gson.toJson(epic);
-        final HttpRequest.BodyPublisher body2 = HttpRequest.BodyPublishers.ofString(json2);
-        HttpRequest post2Request = HttpRequest.newBuilder().uri(uri).POST(body2).build();
-        HttpResponse<String> post2Response = client.send(post2Request, HttpResponse.BodyHandlers.ofString());
+        String subTaskToUpdate = gson.toJson(epic);
+        final HttpRequest.BodyPublisher updateSubTaskBody = HttpRequest.BodyPublishers.ofString(subTaskToUpdate);
+        HttpRequest requestToUpdateSubTask = HttpRequest.newBuilder().uri(uri).POST(updateSubTaskBody).build();
+        client.send(requestToUpdateSubTask, HttpResponse.BodyHandlers.ofString());
         assertEquals(epic.getSubTasks().size(), 2);
 
         HttpRequest getRequest = HttpRequest.newBuilder().uri(uri).GET().build();

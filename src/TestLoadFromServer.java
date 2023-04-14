@@ -55,7 +55,6 @@ public class TestLoadFromServer {
 
 
         HttpTaskManager loadedManager = new HttpTaskManager("http://localhost:8078");
-        loadedManager.load();
 
         System.out.println(manager.getPrioritizedTasks());
         System.out.println(loadedManager.getPrioritizedTasks());
@@ -64,7 +63,5 @@ public class TestLoadFromServer {
         System.out.println(loadedManager.getHistory());
 
         server.stop();
-
-
     }
 }

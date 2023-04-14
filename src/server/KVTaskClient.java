@@ -43,8 +43,9 @@ public class KVTaskClient {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             return response.body();
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            System.out.println("Данные отсутствуют!");
         }
+        return "";
     }
 
     private String register() {

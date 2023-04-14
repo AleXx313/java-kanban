@@ -22,12 +22,6 @@ public class EpicTask extends Task {
 
     }
 
-    public void setEpicIdForSubTasks() {
-        for (SubTask subTask : subTasks.values()) {
-            subTask.setEpicTaskId(this.id);
-        }
-    }
-
     public HashMap<Integer, SubTask> getSubTasks() {
         return subTasks;
     }

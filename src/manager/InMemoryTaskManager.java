@@ -103,7 +103,7 @@ public class InMemoryTaskManager implements TaskManager {
             return allTasks;
         }
 
-        return new ArrayList<SubTask>();
+        return new ArrayList<>();
     }
 
     //Удаляем задачи

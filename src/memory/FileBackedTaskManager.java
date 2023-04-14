@@ -221,6 +221,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private void loadHistory(String line) {
         List<Integer> history = historyFromString(line);
 
+        fillHistory(history);
+    }
+
+    protected void fillHistory(List<Integer> history){
         for (Integer id : history) {
             if (tasks.containsKey(id)) {
                 historyManager.add(tasks.get(id));

@@ -9,7 +9,6 @@ import tasks.SubTask;
 import tasks.Task;
 import util.Managers;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.regex.Pattern;
@@ -20,22 +19,18 @@ public class HttpTaskServer {
 
     private static final int PORT = 8080;
 
-    private TaskManager taskManager;
-    private Gson gson;
-    private HttpServer server;
+    private final TaskManager taskManager;
+    private final  Gson gson;
+    private final  HttpServer server;
 
-    public HttpTaskServer() throws IOException {
-        taskManager = Managers.getFileBackedTaskManager(new File("src/data.csv"));
+    public HttpTaskServer(TaskManager taskManager) throws IOException {
+        this.taskManager = taskManager;
         gson = Managers.getDefaultGson();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/tasks/task", this::handleTasks);
         server.createContext("/tasks/subtask", this::handleSubtasks);
         server.createContext("/tasks/epic", this::handleEpics);
         server.createContext("/tasks", this::handleInfo);
-    }
-    public HttpTaskServer(TaskManager taskManager) throws IOException {
-        this();
-        this.taskManager = taskManager;
     }
 
     private void handleTasks(HttpExchange h){

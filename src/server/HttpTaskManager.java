@@ -18,9 +18,9 @@ public class HttpTaskManager extends FileBackedTaskManager {
     private final Gson gson;
 
     public HttpTaskManager(String path) {
-        super();
         client = new KVTaskClient(path);
         gson = Managers.getDefaultGson();
+        load();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class HttpTaskManager extends FileBackedTaskManager {
         return historyById;
     }
 
-    public void load() {
+    private void load() {
         String loadedJson = client.load("task");
         Type listType = new TypeToken<List<Task>>() {
         }.getType();
@@ -68,10 +68,16 @@ public class HttpTaskManager extends FileBackedTaskManager {
 
         loadedJson = client.load("id");
         Integer id = gson.fromJson(loadedJson, Integer.class);
+        if (id == null){
+            return;
+        }
         setIdCounter(id);
     }
 
     private void loadTasks(List<Task> loadedTasks) {
+        if (loadedTasks == null){
+            return;
+        }
         for (Task task : loadedTasks) {
             tasks.put(task.getId(), task);
             timeTree.add(task);
@@ -79,12 +85,18 @@ public class HttpTaskManager extends FileBackedTaskManager {
     }
 
     private void loadEpics(List<EpicTask> loadedEpics) {
+        if (loadedEpics == null){
+            return;
+        }
         for (EpicTask epicTask : loadedEpics) {
             epicTasks.put(epicTask.getId(), epicTask);
         }
     }
 
     private void loadSubs(List<SubTask> loadedSubs) {
+        if (loadedSubs == null){
+            return;
+        }
         for (SubTask subTask : loadedSubs) {
             EpicTask epic = epicTasks.get(subTask.getEpicTaskId());
             subTask.setEpicTask(epic);
@@ -95,14 +107,9 @@ public class HttpTaskManager extends FileBackedTaskManager {
     }
 
     public void loadHistory(List<Integer> loadedHistory) {
-        for (Integer id : loadedHistory) {
-            if (tasks.containsKey(id)) {
-                historyManager.add(tasks.get(id));
-            } else if (epicTasks.containsKey(id)) {
-                historyManager.add(epicTasks.get(id));
-            } else if (subTasks.containsKey(id)) {
-                historyManager.add(subTasks.get(id));
-            }
+        if (loadedHistory == null){
+            return;
         }
+        fillHistory(loadedHistory);
     }
 }

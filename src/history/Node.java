@@ -3,7 +3,7 @@ package history;
 import tasks.Task;
 
 public class Node {
-    //Данные хранимые в узле - объекты класса Tasks.Task
+    //Данные хранимые в узле - объекты класса Tasks. Task
     private final Task task;
     //Ссылка на предыдущую ноду. Если это хвост, то ссылка на null
 

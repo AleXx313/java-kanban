@@ -1,7 +1,6 @@
 package tasks;
 
 import com.google.gson.annotations.Expose;
-import manager.TaskManager;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
