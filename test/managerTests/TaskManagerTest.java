@@ -24,13 +24,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @BeforeEach
     public void createTask() {
         task = new Task("Test addNewTask", "Test addNewTask description",
-                LocalDateTime.of(2022,03,29,6,0,0), 60);
+                LocalDateTime.of(2022, 3,29,6,0,0), 60);
         task.setId(1);
         epicTask = new EpicTask("Test addNewEpicTask", "Test addNewEpicTask description",
-                LocalDateTime.of(2022,03,29,0,0,0), 60);
+                LocalDateTime.of(2022,3,29,0,0,0), 60);
         epicTask.setId(2);
         subTask = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
-                LocalDateTime.of(2022,03,29,8,0,0), 60, epicTask);
+                LocalDateTime.of(2022,3,29,8,0,0), 60, epicTask);
         subTask.setId(3);
     }
 
@@ -295,13 +295,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void getPrioritizedShouldReturnListWithAscendingOrder(){
         Task task2 = new Task("TestTask2", "TestTask2",
-                LocalDateTime.of(2022, 03,29,5,0,0), 59);
+                LocalDateTime.of(2022, 3,29,5,0,0), 59);
         Task task3 = new Task("TestTask3", "TestTask3",
-                LocalDateTime.of(2022, 03,29,4,0,0), 59);
+                LocalDateTime.of(2022, 3,29,4,0,0), 59);
         Task task4 = new Task("TestTask4", "TestTask4",
-                LocalDateTime.of(2022, 03,29,3,0,0), 59);
+                LocalDateTime.of(2022, 3,29,3,0,0), 59);
         SubTask subTask2 = new SubTask("TestSubTask2", "TestSubTask2",
-                LocalDateTime.of(2022,03,29,12,0,0), 59, epicTask);
+                LocalDateTime.of(2022,3,29,12,0,0), 59, epicTask);
         taskManager.createTask(task);
         taskManager.createTask(task2);
         taskManager.createTask(task3);
@@ -318,13 +318,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldNotCreateNewTaskIfItOverlapExistingTasks(){
         Task task2 = new Task("TestTask2", "TestTask2",
-                LocalDateTime.of(2022, 03,29,5,45,0), 60);
+                LocalDateTime.of(2022, 3,29,5,45,0), 60);
         Task task3 = new Task("TestTask3", "TestTask3",
-                LocalDateTime.of(2022, 03,29,5,01,0), 60);
+                LocalDateTime.of(2022, 3,29,5,1,0), 60);
         Task task4 = new Task("TestTask4", "TestTask4",
-                LocalDateTime.of(2022, 03,29,6,59,0), 60);
+                LocalDateTime.of(2022, 3,29,6,59,0), 60);
         SubTask subTask2 = new SubTask("TestSubTask2", "TestSubTask2",
-                LocalDateTime.of(2022,03,29,8,30,0), 60, epicTask);
+                LocalDateTime.of(2022,3,29,8,30,0), 60, epicTask);
         taskManager.createTask(task);
         taskManager.createTask(task2);
         taskManager.createTask(task3);
